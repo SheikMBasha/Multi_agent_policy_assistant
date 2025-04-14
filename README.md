@@ -230,3 +230,10 @@ User: Okay, now calculate dealer incentive for application ID.
 
 User: That amount seems wrong, I want to file a complaint.
 → DealerAgent logs the complaint
+
+# Changes done for 15th April demo - part1
+- added shared context to preserve conversation context and user details.
+- max_round count is set to 20 in groupchat.
+- in llm config, added "cache_seed": None   
+  - to disable the cache folder, need to manage in better way
+- Added greetings before initiate chat to get user details and greet user.

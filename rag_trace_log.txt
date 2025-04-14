@@ -1,0 +1,203 @@
+
+🕓 [2025-04-13 23:31:35] Query: what is the policy for used car loans
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: paying for these products/services only if you need them. Term length of your loan - car loans generally range from 36 months to 72 months. Longer terms can lower your monthly payments but could cost...
+📄 Chunk 2: Before You Buy New Vehicles Used Vehicles At this time, Wells Fargo Auto loans are only available through dealerships. With a network of nearly 11,000 dealerships nationwide, be sure to ask the dealer...
+📄 Chunk 3: and rate remain the same) or an adjustable rate (monthly payments and rate can change). Your interest rate and monthly payments will depend on your credit, your income, and your vehicle preference. In...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:36:07] Query: What documents are required to apply for an auto loan?
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:36:09] Query: 
+You are the PolicyAgent.
+
+Use ONLY the context below to answer the user's question.
+If the context is unrelated or insufficient, clearly say:
+"This answer is not based on the retrieved documents."
+
+Context:
+Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder name on my auto loan? If you need to update a name on your auto loan, you’ll need to provide us with legal documentation for the change you’re requesting. Acceptable forms of documentation include: For changing a name: marriage certificate, divorce decree, petition for a name change, certificate of
+---
+a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document, and follow the steps to complete the process. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Make sure your files are not encrypted or password- protected Make sure your documents are clear, legible, and
+---
+vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Ensure your files aren't encrypted or password protected Make sure your documents are clear, legible, and include all pages – even blank ones Mail Wells Fargo Auto Attn: Out-of-State Transfers MAC
+
+Question: What documents are required to apply for an auto loan?
+
+Answer:
+
+(Include for debug/audit)
+Confidence: High
+Sources:
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:37:13] Query: What documents are required to apply for an auto loan?
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:37:14] Query: 
+You are the PolicyAgent.
+
+Use ONLY the context below to answer the user's question.
+If the context is unrelated or insufficient, clearly say:
+"This answer is not based on the retrieved documents."
+
+Context:
+Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder name on my auto loan? If you need to update a name on your auto loan, you’ll need to provide us with legal documentation for the change you’re requesting. Acceptable forms of documentation include: For changing a name: marriage certificate, divorce decree, petition for a name change, certificate of
+---
+a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document, and follow the steps to complete the process. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Make sure your files are not encrypted or password- protected Make sure your documents are clear, legible, and
+---
+vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Ensure your files aren't encrypted or password protected Make sure your documents are clear, legible, and include all pages – even blank ones Mail Wells Fargo Auto Attn: Out-of-State Transfers MAC
+
+Question: What documents are required to apply for an auto loan?
+
+Answer:
+
+(Include for debug/audit)
+Confidence: High
+Sources:
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:41:27] PolicyAgent RAG Call
+🗣️ Query: What documents are required to apply for an auto loan?
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:41:29] PolicyAgent RAG Call
+🗣️ Query: 
+You are the PolicyAgent.
+
+Use ONLY the context below to answer the user's question.
+If the context is unrelated or insufficient, clearly say:
+"This answer is not based on the retrieved documents."
+
+Context:
+Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder name on my auto loan? If you need to update a name on your auto loan, you’ll need to provide us with legal documentation for the change you’re requesting. Acceptable forms of documentation include: For changing a name: marriage certificate, divorce decree, petition for a name change, certificate of
+---
+a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document, and follow the steps to complete the process. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Make sure your files are not encrypted or password- protected Make sure your documents are clear, legible, and
+---
+vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Ensure your files aren't encrypted or password protected Make sure your documents are clear, legible, and include all pages – even blank ones Mail Wells Fargo Auto Attn: Out-of-State Transfers MAC
+
+Question: What documents are required to apply for an auto loan?
+
+Answer:
+
+(Include for debug/audit)
+Confidence: High
+Sources:
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:43:35] PolicyAgent RAG Call
+🗣️ Query: What documents are required to apply for an auto loan?
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:43:39] PolicyAgent RAG Call
+🗣️ Query: 
+You are the PolicyAgent.
+
+Use ONLY the context below to answer the user's question.
+If the context is unrelated or insufficient, clearly say:
+"This answer is not based on the retrieved documents."
+
+Context:
+Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder name on my auto loan? If you need to update a name on your auto loan, you’ll need to provide us with legal documentation for the change you’re requesting. Acceptable forms of documentation include: For changing a name: marriage certificate, divorce decree, petition for a name change, certificate of
+---
+a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document, and follow the steps to complete the process. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Make sure your files are not encrypted or password- protected Make sure your documents are clear, legible, and
+---
+vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Ensure your files aren't encrypted or password protected Make sure your documents are clear, legible, and include all pages – even blank ones Mail Wells Fargo Auto Attn: Out-of-State Transfers MAC
+
+Question: What documents are required to apply for an auto loan?
+
+Answer:
+
+(Include for debug/audit)
+Confidence: High
+Sources:
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:46:33] PolicyAgent RAG Call
+🗣️ Query: What documents are required to apply for an auto loan?
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------
+
+🕓 [2025-04-13 23:46:35] PolicyAgent RAG Call
+🗣️ Query: 
+You are the PolicyAgent.
+
+Use ONLY the context below to answer the user's question.
+If the context is unrelated or insufficient, clearly say:
+"This answer is not based on the retrieved documents."
+
+Context:
+Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder name on my auto loan? If you need to update a name on your auto loan, you’ll need to provide us with legal documentation for the change you’re requesting. Acceptable forms of documentation include: For changing a name: marriage certificate, divorce decree, petition for a name change, certificate of
+---
+a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document, and follow the steps to complete the process. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Make sure your files are not encrypted or password- protected Make sure your documents are clear, legible, and
+---
+vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: Attach accepted file formats: PDF, JPEG, JPG, PNG, or GIF Upload no more than 25 files and 25 MB total Ensure your files aren't encrypted or password protected Make sure your documents are clear, legible, and include all pages – even blank ones Mail Wells Fargo Auto Attn: Out-of-State Transfers MAC
+
+Question: What documents are required to apply for an auto loan?
+
+Answer:
+
+(Include for debug/audit)
+Confidence: High
+Sources:
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+
+🔍 Retrieved 3 chunks from RAG
+📄 Chunk 1: Make sure your documents are clear, legible, and include all pages – even blank ones We'll review your documents and contact you if we need additional information. How do I update an account holder na...
+📄 Chunk 2: a vehicle title to a different state Change an account holder name on your auto loan Sign on and select Upload Documents from your auto loan. Select the reason for your upload and the type of document...
+📄 Chunk 3: vehicle department processing time. Requests can be submitted to us online, by mail, or by fax. Online Sign on and select Upload Documents from your auto loan. Keep these upload guidelines in mind: At...
+--------------------------------------------------------------------------------

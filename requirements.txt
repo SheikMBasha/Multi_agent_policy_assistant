@@ -7,3 +7,18 @@ langchain-community==0.0.36
 faiss-cpu
 PyPDF2
 beautifulsoup4
+
+# FastAPI + Webhook Server
+fastapi
+uvicorn
+
+# JSON handling, request parsing
+httpx
+
+# Optional: Streamlit UI (if needed later)
+streamlit
+
+# Optional: for testing with external URLs
+ngrok
+
+google-cloud-dialogflow

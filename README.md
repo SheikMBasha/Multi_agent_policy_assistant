@@ -237,3 +237,9 @@ User: That amount seems wrong, I want to file a complaint.
 - in llm config, added "cache_seed": None   
   - to disable the cache folder, need to manage in better way
 - Added greetings before initiate chat to get user details and greet user.
+
+# Changes done for 15th April demo - part1
+- made changes to greet to user.
+- made changes to remove "Provide feedback to chat_manager".
+- made some changes to streamlit, and DialogFlow integration. Yet to be tested thoroughly.
+- added file autogen_runner to trigger this code from dialogflow.

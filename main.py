@@ -40,7 +40,7 @@ code_execution_config = {
 # Create user proxy agent using custom implementation
 user_proxy = CustomUserProxyAgent(
     name="user",
-    human_input_mode="TERMINATE",
+    human_input_mode="NEVER",
     is_termination_msg=lambda msg: "[final_answer]" in msg.get("content", "").lower(),
     code_execution_config=code_execution_config,
     max_consecutive_auto_reply=0
@@ -67,32 +67,56 @@ manager = GroupChatManager(
 )
 
 
-def main():
-    print("👋 Hello! I'm your virtual assistant.")
-    name_input = input("May I know your name please? (e.g., Srikanth or Ms. Raina): ")
+# def main():
+#     print("👋 Hello! I'm your virtual assistant.")
+#     name_input = input("May I know your name please? (e.g., Srikanth or Ms. Raina): ")
 
-    # Format the name
-    if name_input.lower().startswith("ms"):
-        user_name = f"Ms. {name_input.split()[-1]}"
-    else:
-        user_name = f"Mr. {name_input.split()[-1]}"
+#     # Format the name
+#     if name_input.lower().startswith("ms"):
+#         user_name = f"Ms. {name_input.split()[-1]}"
+#     else:
+#         user_name = f"Mr. {name_input.split()[-1]}"
 
-    print(f"Nice to meet you, {user_name}! How can I assist you today?\n")
-    print("🧠 Starting Multi-Agent Policy Assistant...")
+#     print(f"Nice to meet you, {user_name}! How can I assist you today?\n")
+#     print("🧠 Starting Multi-Agent Policy Assistant...")
 
-    while True:
-        user_text = input("> ")
-        if user_text.lower() in ["exit", "quit", "bye"]:
-            print("Thank you for using our service. Have a great day!")
-            break
+#     while True:
+#         user_text = input("> ")
+#         if user_text.lower() in ["exit", "quit", "bye"]:
+#             print("Thank you for using our service. Have a great day!")
+#             break
 
-        # Start chat
-        user_proxy.initiate_chat(
-            manager,
-            message=user_text
-        )
-        print("\n")  # Add a blank line after each conversation
+#         # Start chat
+#         user_proxy.initiate_chat(
+#             manager,
+#             message=user_text
+#         )
+#         print("\n")  # Add a blank line after each conversation
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+
+allowed_agents = {"PolicyAgent", "PricingAgent", "DealerAgent"}
+
+def chat_with_agents(user_input: str) -> str:
+    print("User input received:", user_input)
+
+    # Start the conversation
+    response = user_proxy.initiate_chat(
+        recipient=manager,
+        message=user_input,
+        summary_method="last_n",
+        summary_config={"last_n": 10},
+    )
+
+    print("Conversation so far:")
+    for message in groupchat.messages:
+        print(f"messages:{message}")
+
+    # Reverse loop to find last relevant message from allowed agents
+    for msg in reversed(groupchat.messages):
+        if msg.get("name") in allowed_agents:
+            return msg["content"]
+
+    return "No relevant agent response found."

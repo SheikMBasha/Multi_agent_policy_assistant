@@ -174,6 +174,7 @@ if st.session_state.thinking:
     st.session_state.chat.append(("Bot", bot_reply))
     st.session_state.thinking = False
 
+    # Uncomment below for audio output.
     # Queue the text to be spoken with a unique ID
     st.session_state.speak_text = bot_reply
 

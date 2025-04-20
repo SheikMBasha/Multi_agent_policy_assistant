@@ -10,5 +10,5 @@ if not OPENAI_API_KEY:
 llm_config = {
     "config_list": [{"model": "gpt-3.5-turbo", "api_key": OPENAI_API_KEY}],
     "temperature": 0.3,
-    "cache_seed": None  # 👈 Disable cache
+    "cache_seed": None,  # 👈 Disable cache
 }

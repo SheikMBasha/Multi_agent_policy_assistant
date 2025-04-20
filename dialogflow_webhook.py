@@ -3,6 +3,9 @@ from fastapi.responses import JSONResponse
 from shared.context import shared_context
 from autogen_runner import start_autogen_conversation
 from main import chat_with_agents
+from twilio.twiml.voice_response import VoiceResponse, Gather
+from fastapi.responses import PlainTextResponse
+
 
 
 
@@ -27,6 +30,53 @@ app = FastAPI()
 #             }
 #         ]
 #     })
+
+@app.post("/voice", response_class=PlainTextResponse)
+async def voice(request: Request):
+    form = await request.form()
+    user_input = form.get("SpeechResult")
+
+    response = VoiceResponse()
+
+    if user_input:
+        print("User said:", user_input)
+        agent_reply = chat_with_agents(user_input)
+        bot_reply = agent_reply.replace("[final_answer]", "").strip()
+        print(f"Bot says: {bot_reply}")
+        # Say the reply first
+        response.say(bot_reply)
+
+
+        # Then ask for the next input using <Gather> again
+        gather = Gather(
+            input="speech",
+            timeout=5,
+            speech_timeout="auto",
+            action="/voice",
+            method="POST"
+        )
+
+        response.append(gather)
+
+        # Fallback if they say nothing
+        response.say("I didn’t catch that. Thanks for calling!")
+        response.hangup()
+
+    else:
+        # Initial interaction
+        gather = Gather(
+            input="speech",
+            timeout=5,
+            speech_timeout="auto",
+            action="/voice",
+            method="POST"
+        )
+        gather.say("Hey there, how can I assist you today?")
+        response.append(gather)
+        response.say("I didn’t hear anything. Goodbye.")
+        response.hangup()
+
+    return str(response)
 
 
 @app.post("/webhook")

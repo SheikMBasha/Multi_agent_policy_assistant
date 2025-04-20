@@ -3,45 +3,65 @@ from shared.llm_config import llm_config
 from shared.context import ConversationContext
 from shared.schemas import DealerIncentiveRequest
 
+# def calculate_dealer_incentive(contractAPR: float, buyRate: float) -> str:
+#     try:
+#         url = "http://localhost:8000/calculate-incentive"  # Replace with your deployed URL if needed
+#         params = {"contractAPR": contractAPR, "buyRate": buyRate}
+#         response = requests.get(url, params=params)
+
+#         if response.status_code == 200:
+#             incentive = response.json().get("incentive", None)
+#             return f"The calculated dealer incentive is ${incentive}."
+#         else:
+#             return "Failed to fetch incentive from the API."
+#     except Exception as e:
+#         return f"Error occurred: {str(e)}"
+
+
+
 pricing_agent = AssistantAgent(
     name="PricingAgent",
     llm_config=llm_config,
     system_message="""
-You are the PricingAgent. You help calculate dealer incentives using contract APR and buy rate.
+You are the PricingAgent. You assist users in calculating dealer incentives using the formula:
 
-Steps:
-1. Ask the user for both contract APR and buy rate.
-2. If one is missing, ask naturally like a human would.
-3. Use previously provided values (shared context) if available.
-4. Once both values are available, compute incentive as:
-   incentive = (contractAPR - buyRate) * 1000
-5. Respond with the computed incentive clearly and end with [final_answer]
+You have access to a function named `calculate_dealer_incentive(contractAPR: float, buyRate: float)` which performs the calculation and returns the result.
 
-Respond as naturally and conversationally as possible.
+Behavior Instructions:
+1. Always start by asking the user for both the contract APR and buy rate, if not already provided.
+2. If the user provides only one value, acknowledge it and ask for the missing one.
+3. Once you have both `contractAPR` and `buyRate`, call the tool `calculate_dealer_incentive(contractAPR, buyRate)`.
+4. After receiving the result, reply with a clear, friendly message showing the incentive value and end your message with `[final_answer]`.
+5. Keep the tone natural and conversational, like you're helping a colleague.
+6. Remember values from earlier in the conversation unless the user updates them.
+
+Only call the tool once both values are available. If any are missing, ask for them.
 """
 )
+
+
+
 
 @pricing_agent.register_for_execution()
 def pricing_executor(_, messages, **__):
     from pydantic import ValidationError
-    user_input = messages[-1]["content"]
 
-    # update context from LLM-extracted values
+    user_input = messages[-1]["content"]
     ConversationContext.update("last_user_input", user_input)
 
-    # assemble the prompt for LLM
     current_context = ConversationContext.as_prompt()
 
     try:
         req = DealerIncentiveRequest(**ConversationContext.to_dict())
-        incentive = (req.contractAPR - req.buyRate) * 1000
+        result = calculate_dealer_incentive(req.contractAPR, req.buyRate)
         ConversationContext.clear()
-        return True, f"Great! The dealer incentive is estimated to be ${incentive:.2f}. [final_answer]"
+        return True, result
     except ValidationError:
-        # Let the LLM naturally handle missing values in the prompt
         return True, f"""
-Use the following partial information provided so far:
+We don't yet have all the information we need to calculate the dealer incentive.
+
 {current_context}
 
-Now, naturally ask the user to provide the missing information (contract APR or buy rate) in a human way.
+Please ask the user for the missing values (contract APR or buy rate) in a friendly, human way.
 """
+

@@ -7,7 +7,12 @@ from agents.router_agent import router_agent
 from agents.policy_agent import policy_agent
 from agents.pricing_agent import pricing_agent
 from agents.dealer_agent import dealer_agent
+from agents.smallTalk_agent import small_talk_agent
+from typing import Annotated
+import requests
 
+
+current_user_name = "Unknown"
 
 # Custom UserProxyAgent implementation
 class CustomUserProxyAgent(UserProxyAgent):
@@ -46,25 +51,76 @@ user_proxy = CustomUserProxyAgent(
     max_consecutive_auto_reply=0
 )
 
-# Create the group chat
-groupchat = GroupChat(
-    agents=[
-        user_proxy,
-        router_agent,
-        pricing_agent,
-        policy_agent,
-        dealer_agent
-    ],
-    messages=[],
-    max_round=20,
+code_interpreter = UserProxyAgent(
+    "code-interpreter",
+    human_input_mode="NEVER",
+    code_execution_config={
+        "work_dir": "coding",
+        "use_docker": False,
+    },
+    default_auto_reply="",
+    is_termination_msg=lambda x: x.get("content", "").find("TERMINATE") >= 0,
 )
 
-# Create the group chat manager
-manager = GroupChatManager(
-    groupchat=groupchat,
-    llm_config=llm_config,
-    code_execution_config=code_execution_config
+
+@code_interpreter.register_for_execution()
+@small_talk_agent.register_for_llm(
+    name="get_current_user_name",
+    description="Get the current user's name."
 )
+def get_current_user_name() -> str:
+    """Returns the current user's name."""
+    global current_user_name
+    print("Fetching current user name...")
+    return current_user_name
+
+
+@code_interpreter.register_for_execution()
+@small_talk_agent.register_for_llm(
+    name="set_current_user_name",
+    description="Set the current user's name with optional title (Mr/Ms)."
+)
+def set_current_user_name(
+    name: Annotated[str, "User's name"],
+    title: Annotated[str, "Optional title (Mr/Ms)"] = None
+) -> str:
+    """Sets the current user's name and returns confirmation message."""
+    global current_user_name
+    if title:
+        current_user_name = f"{title}. {name}"
+    else:
+        current_user_name = name
+    return f"Name has been set to: {current_user_name}"
+
+
+# @router_agent.register_for_llm(
+#     name="get_current_user_name",
+#     description="Get the current user's name."
+# )
+# def get_current_user_name() -> str:
+#     """Returns the current user's name."""
+#     global current_user_name
+#     print("Fetching current user name...")
+#     return current_user_name
+
+@code_interpreter.register_for_execution()
+@pricing_agent.register_for_llm(
+    name="calculate_dealer_incentive",
+    description="Calculate dealer incentive based on contract APR and buy rate."
+)
+def calculate_dealer_incentive(contractAPR: float, buyRate: float) -> str:
+    try:
+        url = "http://localhost:8000/calculate-incentive"  # Replace with your deployed URL if needed
+        params = {"contractAPR": contractAPR, "buyRate": buyRate}
+        response = requests.get(url, params=params)
+
+        if response.status_code == 200:
+            incentive = response.json().get("incentive", None)
+            return f"The calculated dealer incentive is ${incentive}."
+        else:
+            return "Failed to fetch incentive from the API."
+    except Exception as e:
+        return f"Error occurred: {str(e)}"
 
 
 # def main():
@@ -97,8 +153,30 @@ manager = GroupChatManager(
 # if __name__ == "__main__":
 #     main()
 
+# Create the group chat
+groupchat = GroupChat(
+    agents=[
+        user_proxy,
+        router_agent,
+        pricing_agent,
+        policy_agent,
+        dealer_agent,
+        small_talk_agent,
+        code_interpreter
+    ],
+    messages=[],
+    max_round=20,
+)
 
-allowed_agents = {"PolicyAgent", "PricingAgent", "DealerAgent"}
+# Create the group chat manager
+manager = GroupChatManager(
+    groupchat=groupchat,
+    llm_config=llm_config,
+    code_execution_config=code_execution_config
+)
+
+
+allowed_agents = {"PolicyAgent", "PricingAgent", "DealerAgent", "SmallTalkAgent"}
 
 def chat_with_agents(user_input: str) -> str:
     print("User input received:", user_input)
@@ -120,4 +198,4 @@ def chat_with_agents(user_input: str) -> str:
         if msg.get("name") in allowed_agents:
             return msg["content"]
 
-    return "No relevant agent response found."
+    return "Sorry, i didn't get that. Can you please repeat?"

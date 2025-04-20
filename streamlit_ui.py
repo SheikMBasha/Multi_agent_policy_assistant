@@ -1,4 +1,5 @@
 import os
+from dotenv import load_dotenv
 import streamlit as st
 import speech_recognition as sr
 from google.cloud import dialogflow_v2 as dialogflow
@@ -8,9 +9,22 @@ import threading
 import uuid
 import time
 
+load_dotenv()
+
+from twilio.rest import Client
+
+account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+twilio_number = os.getenv("TWILIO_PHONE_NUMBER")  # Twilio number
+to_number = os.getenv("TWILIO_TO_PHONE_NUMBER")  # Your phone number
+
+print(account_sid)
+
+client = Client(account_sid, auth_token)
+
 # Google Cloud credentials
 os.environ[
-    "GOOGLE_APPLICATION_CREDENTIALS"] = r"D:\LearningWorkSpace\AIVoiceAssistant\intelligent-ivr-jiud-fdd92f56d16f.json"
+    "GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\Yuvraj\OneDrive\Desktop\langGraph\DialogFlow\intelligent-ivr-jiud-fdd92f56d16f.json"
 
 project_id = "intelligent-ivr-jiud"
 session_id = "user-session-1"
@@ -24,7 +38,6 @@ def get_engine():
     engine.setProperty('rate', 150)
     engine.setProperty('volume', 0.9)
     return engine
-
 
 def speak(text):
     """Text-to-speech function that creates a new engine instance each time"""
@@ -144,7 +157,20 @@ with st.form(key="chat_form", clear_on_submit=True):
     with col1:
         send_clicked = st.form_submit_button("Send")
     with col2:
-        st.session_state.mic_clicked = st.form_submit_button("🎤")
+        mic_col1, mic_col2 = st.columns([1, 1])
+        with mic_col1:
+            st.session_state.mic_clicked = st.form_submit_button("🎤")
+        with mic_col2:
+            bell_clicked = st.form_submit_button("📞")
+
+if bell_clicked:
+    
+    call = client.calls.create(
+        to=to_number,
+        from_=twilio_number,
+        url="https://42e9-2405-201-c404-8812-a9b6-ccc7-dbb7-189d.ngrok-free.app/voice"
+    )
+
 
 # --- Mic Click Handling ---
 if st.session_state.get("mic_clicked", False):
@@ -170,7 +196,7 @@ if st.session_state.thinking:
     else:
         result = detect_intent_text(st.session_state.chat[-1][1])
 
-    bot_reply = result.fulfillment_text
+    bot_reply = result.fulfillment_text.replace("[final_answer]", "").strip()
     st.session_state.chat.append(("Bot", bot_reply))
     st.session_state.thinking = False
 

@@ -11,6 +11,12 @@ uvicorn dialogflow_webhook:app --reload --port 5001
 
 streamlit run streamlit_ui.py
 
+Note: Add your number on the top for twilio calling.
+
+# To run pricing api server
+
+uvicorn pricing_agent_api:app --reload --port 8000
+
 # .env file sample
 
 # OpenAI API Key

@@ -1,0 +1,121 @@
+
+
+=== 2025-04-19 15:27:30 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Test Demo voice assistant 1
+
+EXTRACTED OUTPUT:
+None
+================================================================================
+
+=== 2025-04-19 15:30:41 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Test Demo voice assistant 1
+
+EXTRACTED OUTPUT:
+None
+================================================================================
+
+=== 2025-04-19 15:47:13 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Test Demo voice assistant 1
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Test Demo voice assistant 1
+Description: Creating this email to verify Demo voice assistant application demo.
+Priority: Medium
+Tags: Demo, voice assistant, application
+```
+================================================================================
+
+=== 2025-04-19 15:52:55 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Test Demo voice assistant 1
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Test Demo voice assistant 1
+Description: Creating this email to verify Demo voice assistant application demo.
+Priority: Medium
+Tags: Demo, voice assistant
+```
+================================================================================
+
+=== 2025-04-19 15:55:57 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are encountering a "500 Internal Server Error" when trying to log in via the main portal at https://portal.example.com/login after the recent deployment around 11 AM IST today. This issue is affecting all customer logins.
+Priority: High
+Tags: login, 500 error, production, deployment
+```
+================================================================================
+
+=== 2025-04-19 16:15:50 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error after recent deployment
+Description: Users are unable to log in via the main portal (https://portal.example.com/login) as they encounter a "500 Internal Server Error" after submitting their credentials. The issue started after a recent deployment around 11 AM IST. Urgent investigation and resolution are required to restore customer logins.
+Priority: High
+Tags: production issue, login error, deployment, critical
+```
+
+
+=== 2025-04-19 16:18:58 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are encountering a "500 Internal Server Error" while trying to log in via the main portal (https://portal.example.com/login) after the recent deployment around 11 AM IST. This issue is impacting all customer logins.
+Priority: High
+Tags: production issue, login, 500 error, customer impact
+```
+
+JIRA TICKET: Error creating Jira ticket: Failed to create Jira issue: {"errorMessages":[],"errors":{"priority":"Field 'priority' cannot be set. It is not on the appropriate screen, or unknown."}}
+================================================================================
+
+=== 2025-04-19 16:24:18 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are encountering a "500 Internal Server Error" when trying to log in via the main portal (https://portal.example.com/login) after submitting their credentials. The issue started after a recent deployment around 11 AM IST. Urgent investigation and resolution are required to address this affecting all customer logins.
+Priority: High
+Tags: production issue, login, 500 error
+```
+
+
+=== 2025-04-19 16:30:31 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are experiencing a "500 Internal Server Error" when trying to log in via the main portal (https://portal.example.com/login). The issue started after a recent deployment around 11 AM IST today and is affecting all customer logins. Urgent investigation and resolution are required.
+Priority: High
+Tags: login, 500 error, production issue
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-3
+================================================================================

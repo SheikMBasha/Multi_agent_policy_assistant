@@ -3,13 +3,9 @@ Create a virtual env: python -m venv venv
 Permission to access/enable venv on powershell: Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 Command to active venv: .\venv\Scripts\Activate
 
-# To run webhook server
+#Twillo testing
+python -m uvicorn dialogflow_webhook:app --reload --host 0.0.0.0 --port 8080
 
-uvicorn dialogflow_webhook:app --reload --port 5001
-
-# TO run the ui
-
-streamlit run streamlit_ui.py
 
 # .env file sample
 

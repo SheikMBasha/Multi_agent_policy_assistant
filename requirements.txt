@@ -22,7 +22,19 @@ streamlit
 ngrok
 
 google-cloud-dialogflow
+google-cloud-speech
+SpeechRecognition
+pyaudio
+pyttsx3
 
-streamlit>=1.22.0
-SpeechRecognition>=3.10.0
-pyaudio>=0.2.13
+# Email parsing and IMAP
+imaplib2==3.6
+
+# Jira API integration
+jira==3.6.0
+
+# Optional: For advanced attachment handling
+python-magic==0.4.27  # (file type detection, if needed)
+
+twilio
+python-multipart

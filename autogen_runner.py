@@ -31,5 +31,26 @@ async def start_autogen_conversation(user_text: str) -> str:
         code_execution_config={"use_docker": False}
     )
 
-    reply = user_proxy.initiate_chat(manager, message=user_text)
-    return reply.get("content", "Sorry, I didn’t get that.")
+    await user_proxy.a_initiate_chat(manager, message=user_text)
+
+    # Fetch last meaningful response (usually from the last speaker before user)
+    for msg in reversed(groupchat.messages):
+        if msg.get("content") and "[final_answer]" in msg["content"].lower():
+            return msg["content"].replace("[final_answer]", "").strip()
+
+    return "Sorry, I didn’t get that."
+
+    # reply = user_proxy.initiate_chat(manager, message=user_text)
+    # return reply.get("content", "Sorry, I didn’t get that.")
+
+    # response = ""
+    # for step in user_proxy.initiate_chat(manager, message=user_text):
+    #     content = step.get("content", "")
+    #     print("🔄 Intermediate:", content)
+    #
+    #     # ✅ Stop when final answer is reached
+    #     if "[final_answer]" in content.lower():
+    #         response = content.replace("[final_answer]", "").strip()
+    #         break
+    #
+    # return response or "Sorry, I didn’t get that."

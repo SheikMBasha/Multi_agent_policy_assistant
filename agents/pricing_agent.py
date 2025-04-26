@@ -3,44 +3,39 @@ from shared.llm_config import llm_config
 from shared.context import ConversationContext
 from shared.schemas import DealerIncentiveRequest
 
-# def calculate_dealer_incentive(contractAPR: float, buyRate: float) -> str:
-#     try:
-#         url = "http://localhost:8000/calculate-incentive"  # Replace with your deployed URL if needed
-#         params = {"contractAPR": contractAPR, "buyRate": buyRate}
-#         response = requests.get(url, params=params)
-
-#         if response.status_code == 200:
-#             incentive = response.json().get("incentive", None)
-#             return f"The calculated dealer incentive is ${incentive}."
-#         else:
-#             return "Failed to fetch incentive from the API."
-#     except Exception as e:
-#         return f"Error occurred: {str(e)}"
-
-
-
 pricing_agent = AssistantAgent(
     name="PricingAgent",
     llm_config=llm_config,
     system_message="""
-You are the PricingAgent. You assist users in calculating dealer incentives using the formula:
+You are the PricingAgent. You assist users in calculating dealer compensation.
 
-You have access to a function named `calculate_dealer_incentive(contractAPR: float, buyRate: float)` which performs the calculation and returns the result.
+🚨 CRITICAL INSTRUCTION:
+You MUST end EVERY response with [final_answer]. This is required for proper conversation termination.
+
+You have access to a function named `calculate_dealer_compensation(dealer_name: string)` which makes an API call and returns compensation information.
 
 Behavior Instructions:
-1. Always start by asking the user for both the contract APR and buy rate, if not already provided.
-2. If the user provides only one value, acknowledge it and ask for the missing one.
-3. Once you have both `contractAPR` and `buyRate`, call the tool `calculate_dealer_incentive(contractAPR, buyRate)`.
-4. After receiving the result, reply with a clear, friendly message showing the incentive value and end your message with `[final_answer]`.
-5. Keep the tone natural and conversational, like you're helping a colleague.
-6. Remember values from earlier in the conversation unless the user updates them.
+1. Always start by asking the user for the dealer name if not already provided.
+2. Once you have the dealer name, call the tool `calculate_dealer_compensation(dealer_name)`.
+3. After receiving the result, share the compensation value with the user.
+4. ALWAYS end EVERY message with `[final_answer]`.
+5. Remember values from earlier in the conversation unless the user updates them.
 
-Only call the tool once both values are available. If any are missing, ask for them.
+Examples of proper responses:
+
+User: "I need to check compensation"
+You: "I can help with that. What's the dealer name? [final_answer]"
+
+User: "The dealer is ABC Motors"
+You: *Call calculate_dealer_compensation("ABC Motors")*
+Then respond: "Based on our records, the compensation for ABC Motors is $XXX. [final_answer]"
+
+User: "Thanks"
+You: "You're welcome! Let me know if you need anything else. [final_answer]"
+
+Remember: ALWAYS include [final_answer] at the end of EVERY response without exception.
 """
 )
-
-
-
 
 @pricing_agent.register_for_execution()
 def pricing_executor(_, messages, **__):
@@ -53,15 +48,15 @@ def pricing_executor(_, messages, **__):
 
     try:
         req = DealerIncentiveRequest(**ConversationContext.to_dict())
-        result = calculate_dealer_incentive(req.contractAPR, req.buyRate)
+        result = calculate_dealer_compensation(req.dealer_name)
         ConversationContext.clear()
         return True, result
     except ValidationError:
         return True, f"""
-We don't yet have all the information we need to calculate the dealer incentive.
+We don't yet have all the information we need to calculate the dealer compensation.
 
 {current_context}
 
-Please ask the user for the missing values (contract APR or buy rate) in a friendly, human way.
+Please ask the user for the missing value (dealer_name) in a friendly, conversational way.
+Always end your response with [final_answer].
 """
-

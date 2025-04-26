@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from shared.context import shared_context
-from autogen_runner import start_autogen_conversation
 from main import chat_with_agents
 from twilio.twiml.voice_response import VoiceResponse, Gather
 from fastapi.responses import PlainTextResponse

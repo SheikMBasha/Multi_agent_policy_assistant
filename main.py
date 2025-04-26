@@ -1,6 +1,7 @@
-from autogen import UserProxyAgent, GroupChat, GroupChatManager
+from autogen import UserProxyAgent, GroupChat, GroupChatManager, initiate_swarm_chat
 from shared.llm_config import llm_config
 import os
+import re
 
 # Import agents
 from agents.router_agent import router_agent
@@ -43,12 +44,12 @@ code_execution_config = {
 }
 
 # Create user proxy agent using custom implementation
-user_proxy = CustomUserProxyAgent(
+user_proxy = UserProxyAgent(
     name="user",
     human_input_mode="NEVER",
-    is_termination_msg=lambda msg: "[final_answer]" in msg.get("content", "").lower(),
+    is_termination_msg=lambda msg: not msg.get("content") or msg.get("content", "") == "" ,
     code_execution_config=code_execution_config,
-    max_consecutive_auto_reply=0
+    max_consecutive_auto_reply=10
 )
 
 code_interpreter = UserProxyAgent(
@@ -105,59 +106,45 @@ def set_current_user_name(
 
 @code_interpreter.register_for_execution()
 @pricing_agent.register_for_llm(
-    name="calculate_dealer_incentive",
+    name="calculate_dealer_compensation",
     description="Calculate dealer incentive based on contract APR and buy rate."
 )
-def calculate_dealer_incentive(contractAPR: float, buyRate: float) -> str:
+def calculate_dealer_compensation(dealer_name: str) -> str:
     try:
-        url = "http://localhost:8000/calculate-incentive"  # Replace with your deployed URL if needed
-        params = {"contractAPR": contractAPR, "buyRate": buyRate}
+        url = "http://localhost:8000/calculate-compensation"  # Replace with your deployed URL if needed
+        params = {"dealerName": dealer_name}
         response = requests.get(url, params=params)
 
         if response.status_code == 200:
-            incentive = response.json().get("incentive", None)
-            return f"The calculated dealer incentive is ${incentive}."
+            compensation = response.json().get("compensation", None)
+            return f"The calculated dealer compensation is ${compensation}. [final_answer]"
         else:
-            return "Failed to fetch incentive from the API."
+            return "Failed to fetch compensation from the API. [final_answer]"
     except Exception as e:
         return f"Error occurred: {str(e)}"
 
 
-# def main():
-#     print("👋 Hello! I'm your virtual assistant.")
-#     name_input = input("May I know your name please? (e.g., Srikanth or Ms. Raina): ")
 
-#     # Format the name
-#     if name_input.lower().startswith("ms"):
-#         user_name = f"Ms. {name_input.split()[-1]}"
-#     else:
-#         user_name = f"Mr. {name_input.split()[-1]}"
+user_proxy.description="Gets the user's input and forwards it to the group chat. It is the agent which will return the final answer."
+pricing_agent.description="Calculates the dealer compensation based on dealer name. It is the agent which will return the final answer."
+dealer_agent.description="Handles complaints and issues raised by car dealers. It acknowledges the problem, confirms a ticket has been created, and transfers the user to a human executive. It is the agent which will return the final answer."
+policy_agent.description="Handles policy-related queries and provides information about the bank's policies. Use if the user is asking about loan policies, rules, required documents, eligibility, term length, maximum age, conditions, or approval criteria. It is the agent which will return the final answer."
+small_talk_agent.description="Engages users in friendly, natural conversation. It greets the user, asks for their name, and ends the conversation politely."
+code_interpreter.description="Executes code and provides the results. It can also set and get the user's name."
 
-#     print(f"Nice to meet you, {user_name}! How can I assist you today?\n")
-#     print("🧠 Starting Multi-Agent Policy Assistant...")
-
-#     while True:
-#         user_text = input("> ")
-#         if user_text.lower() in ["exit", "quit", "bye"]:
-#             print("Thank you for using our service. Have a great day!")
-#             break
-
-#         # Start chat
-#         user_proxy.initiate_chat(
-#             manager,
-#             message=user_text
-#         )
-#         print("\n")  # Add a blank line after each conversation
-
-
-# if __name__ == "__main__":
-#     main()
+allowed_transitions = {
+    user_proxy: [pricing_agent, dealer_agent, policy_agent, small_talk_agent],
+    pricing_agent: [user_proxy, code_interpreter],
+    dealer_agent: [user_proxy],
+    policy_agent: [user_proxy],
+    small_talk_agent: [user_proxy, code_interpreter],
+    code_interpreter: [pricing_agent, small_talk_agent, user_proxy],
+}
 
 # Create the group chat
 groupchat = GroupChat(
     agents=[
         user_proxy,
-        router_agent,
         pricing_agent,
         policy_agent,
         dealer_agent,
@@ -166,6 +153,9 @@ groupchat = GroupChat(
     ],
     messages=[],
     max_round=20,
+    send_introductions=True,
+    # allowed_or_disallowed_speaker_transitions=allowed_transitions,
+    # speaker_transitions_type="allowed",
 )
 
 # Create the group chat manager
@@ -176,26 +166,172 @@ manager = GroupChatManager(
 )
 
 
-allowed_agents = {"PolicyAgent", "PricingAgent", "DealerAgent", "SmallTalkAgent"}
+def process_pricing_agent(user_input):
+
+    dealer_name_match = re.search(r"dealer name is ([\w\s]+)", user_input, re.IGNORECASE)
+
+    messages = [{"role": "user", "content": user_input}]
+    response = pricing_agent.generate_reply(messages=messages)
+    print(f"Agent response: {response}")
+
+
+    if isinstance(response, str):
+        return response
+    
+    if not dealer_name_match:
+        return "Please provide the dealer name to calculate the compensation."
+    
+    
+    if response and response.get("tool_calls"):
+        tool_messages = []
+
+        for tool_call in response["tool_calls"]:
+            import json
+            function_name = tool_call["function"]["name"]
+            function_args = tool_call["function"]["arguments"]
+            args = json.loads(function_args)
+            dealerName = args.get("dealer_name")
+            tool_call_id = tool_call["id"]
+
+            if function_name == "calculate_dealer_compensation":
+                result = calculate_dealer_compensation(dealerName)
+                tool_content = result
+                print(f"Tool call result: {tool_content}")
+
+            tool_messages.append({
+                "role": "tool",
+                "tool_call_id": tool_call_id,
+                "content": tool_content
+            })
+        
+        messages.append({"role": "assistant", "content": None, "tool_calls": response["tool_calls"]})
+        messages.extend(tool_messages)
+        
+        # Step 5: Now generate final agent reply with the updated message history
+        final_response = pricing_agent.generate_reply(messages=messages)
+        print(f"Final response: {final_response}")
+        return final_response
+
+                
+    
+    return response.content
+
+
+def process_small_talk(user_input):
+    # Step 1: Start with the user message
+    messages = [{"role": "user", "content": user_input}]
+    
+    # Step 2: Get the agent's first reply
+    response = small_talk_agent.generate_reply(messages=messages)
+    print(f"Agent response: {response}")
+
+    if isinstance(response, str):
+        return response
+    
+    # Step 3: If agent made tool_calls, handle them
+    if response and response.get("tool_calls"):
+        tool_messages = []
+        
+        for tool_call in response["tool_calls"]:
+            function_name = tool_call["function"]["name"]
+            function_args = tool_call["function"]["arguments"]
+            tool_call_id = tool_call["id"]
+
+            if function_name == "get_current_user_name":
+                result = get_current_user_name()
+                tool_content = f"The current user name is: {result}"
+                print(f"Tool call result: {tool_content}")
+
+            elif function_name == "set_current_user_name":
+                import json
+                args = json.loads(function_args)
+                name = args.get("name")
+                set_current_user_name(name)
+                tool_content = f"User name has been set to {name}."
+
+            else:
+                tool_content = "Function not implemented."
+
+            # VERY IMPORTANT: Append a 'tool' message for each tool call
+            tool_messages.append({
+                "role": "tool",
+                "tool_call_id": tool_call_id,
+                "content": tool_content
+            })
+        
+        # Step 4: Add the assistant tool_call and the tool messages to message history
+        messages.append({"role": "assistant", "content": None, "tool_calls": response["tool_calls"]})
+        messages.extend(tool_messages)
+        
+        # Step 5: Now generate final agent reply with the updated message history
+        final_response = small_talk_agent.generate_reply(messages=messages)
+        print(f"Final response: {final_response}")
+        return final_response
+
+    # Step 6: If no tool calls, just return the agent's normal response
+    if response and response.get("content"):
+        return response["content"]
+
+
+
+def process_user_query(user_input):
+    # Step 1: Send user input to moderator for routing
+    moderator_response = router_agent.generate_reply(
+        messages=[{"role": "user", "content": user_input}]
+    )
+    print(f"Moderator: {moderator_response}")
+    
+    # Step 2: Based on moderator's decision, route to appropriate agent
+    if "pricingagent" in moderator_response.lower():
+        return process_pricing_agent(user_input)
+    
+    elif "policyagent" in moderator_response.lower():
+        final_response = policy_agent.generate_reply(
+            messages=[{"role": "user", "content": user_input}]
+        )
+        print(f"Policy Agent: {final_response}")
+        return final_response
+    
+    elif "dealeragent" in moderator_response.lower():
+        final_response = dealer_agent.generate_reply(
+            messages=[{"role": "user", "content": user_input}]
+        )
+        print(f"Dealer Agent: {final_response}")
+        return final_response
+    
+    elif "smalltalkagent" in moderator_response.lower():
+        return process_small_talk(user_input)
+    
+    else:
+        # Default fallback if moderator doesn't make a clear decision
+        default_response = "I'm not sure which agent can best help you. Could you rephrase your question?"
+        print(f"System: {default_response}")
+        return default_response
+
+
+allowed_agents = {"PolicyAgent", "PricingAgent", "DealerAgent", "SmallTalkAgent", "code-interpreter"}
 
 def chat_with_agents(user_input: str) -> str:
     print("User input received:", user_input)
 
-    # Start the conversation
-    response = user_proxy.initiate_chat(
-        recipient=manager,
-        message=user_input,
-        summary_method="last_n",
-        summary_config={"last_n": 10},
-    )
+    #Start the conversation
+    # response = user_proxy.initiate_chat(
+    #     recipient=manager,
+    #     message=user_input,
+    #     summary_method="reflection_with_llm",
+    #     summary_config={"last_n": 10},
+    # )
 
-    print("Conversation so far:")
-    for message in groupchat.messages:
-        print(f"messages:{message}")
+    # print("Conversation so far:")
+    # for message in groupchat.messages:
+    #     print(f"messages:{message}")
 
-    # Reverse loop to find last relevant message from allowed agents
-    for msg in reversed(groupchat.messages):
-        if msg.get("name") in allowed_agents:
-            return msg["content"]
+    # # Find the last message with [final_answer]
+    # for msg in reversed(groupchat.messages):
+    #     if msg.get("name") in allowed_agents and "[final_answer]" in msg.get("content", "").lower():
+    #         # Return the message without the [final_answer] part for cleaner output
+    #         return msg["content"].replace("[final_answer]", "").strip()
 
-    return "Sorry, i didn't get that. Can you please repeat?"
+    # # Only if no termination message was found
+    # return "Sorry, I didn't get that. Can you please repeat?"
+    return process_user_query(user_input)

@@ -210,30 +210,6 @@ def run_background_service():
                 print(f"Body Preview: {email_data['body'][:150]}...")
                 print(f"===============================================\n")
 
-                # try:
-                #     print("🔍 Processing email directly with GPT...")
-                #     # Process directly with GPT instead of using AutoGen
-                #     response = process_email_with_gpt(email_data)
-                #
-                #     print("\n✅ GPT Output:")
-                #     print("-----------------------------------------------")
-                #     print(response)
-                #     print("-----------------------------------------------\n")
-                #
-                #     # Verification step - log the output
-                #     with open("email_processing_log.txt", "a") as log_file:
-                #         log_file.write(f"\n\n=== {time.strftime('%Y-%m-%d %H:%M:%S')} ===\n")
-                #         log_file.write(f"EMAIL:\nFrom: {email_data['from']}\nSubject: {email_data['subject']}\n")
-                #         log_file.write(f"\nEXTRACTED OUTPUT:\n{response}\n")
-                #         log_file.write("=" * 80)
-                #
-                #     print("📝 Results saved to email_processing_log.txt")
-                #
-                # except Exception as e:
-                #     print(f"❌ Error processing email: {e}")
-                #     import traceback
-                #     traceback.print_exc()
-
                 ticket_result = process_email_and_create_ticket(email_data)
 
                 if ticket_result:

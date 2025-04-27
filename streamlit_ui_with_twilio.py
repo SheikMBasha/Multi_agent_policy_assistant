@@ -6,9 +6,32 @@ import pyttsx3
 import threading
 import uuid
 import time
+import os
+from dotenv import load_dotenv
+from twilio.rest import Client
+
+# Load environment variables
+load_dotenv()
 
 # API configuration
 API_URL = "http://localhost:5001"
+
+# Twilio configuration
+account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+twilio_number = os.getenv("TWILIO_PHONE_NUMBER")  # Twilio number
+to_number = os.getenv("TWILIO_TO_PHONE_NUMBER")  # Default recipient number
+
+# Initialize Twilio client if credentials are available
+twilio_enabled = all([account_sid, auth_token, twilio_number])
+if twilio_enabled:
+    try:
+        client = Client(account_sid, auth_token)
+    except Exception as e:
+        print(f"Error initializing Twilio client: {e}")
+        twilio_enabled = False
+else:
+    print("Twilio not configured - call button will be disabled")
 
 # Create a unique engine for each session
 def get_engine():
@@ -40,6 +63,21 @@ def speak(text):
     # Give it a moment to start speaking
     time.sleep(0.1)
 
+# Function to make a call using Twilio
+def make_twilio_call():
+    if not twilio_enabled:
+        return False, "Twilio is not configured"
+    
+    try:
+        call = client.calls.create(
+            to=to_number,
+            from_=twilio_number,
+            url="https://77b5-2401-4900-8fce-4980-3c47-2962-6948-f4d5.ngrok-free.app/voice"
+        )
+        return True, call.sid
+    except Exception as e:
+        return False, str(e)
+
 # Record with speech_recognition
 def record_audio_sr():
     r = sr.Recognizer()
@@ -58,12 +96,44 @@ def record_audio_sr():
 # Send message to API and get response
 def send_message(message, session_id="default"):
     try:
+        # Include the user's name in the request if available
+        payload = {
+            "message": message, 
+            "session_id": session_id,
+            "debug_cache": True  # Request cache debugging info
+        }
+        
+        # Add user name to the payload if available
+        if st.session_state.get("user_name"):
+            payload["user_name"] = st.session_state.user_name
+        
+        start_time = time.time()
         response = requests.post(
             f"{API_URL}/chat", 
-            json={"message": message, "session_id": session_id}
+            json=payload
         )
+        response_time = time.time() - start_time
         response.raise_for_status()
-        return response.json()
+        
+        response_data = response.json()
+        
+        # Add debug info about potential caching
+        if response_time < 0.1:  # Less than 100ms usually indicates caching
+            response_data["_debug_info"] = f"Response time: {response_time:.3f}s (likely cached)"
+        else:
+            response_data["_debug_info"] = f"Response time: {response_time:.3f}s"
+            
+        # Check if there's explicit cache info from the backend
+        if "cache_hit" in response_data:
+            response_data["_debug_info"] += f" | Cache: {'Hit' if response_data['cache_hit'] else 'Miss'}"
+        
+        # If the response contains user_name in context, update our state
+        if response_data.get("context", {}).get("user_name"):
+            if not st.session_state.get("user_name"):
+                st.session_state.user_name = response_data["context"]["user_name"]
+                print(f"Updated user name from API: {st.session_state.user_name}")
+        
+        return response_data
     except Exception as e:
         st.error(f"Error communicating with backend: {e}")
         return {"agent": "System", "response": "Sorry, I'm having trouble connecting to the backend system."}
@@ -122,6 +192,12 @@ if "waiting_for_closing_response" not in st.session_state:
     st.session_state.waiting_for_closing_response = False
 if "mic_clicked" not in st.session_state:
     st.session_state.mic_clicked = False
+if "call_status" not in st.session_state:
+    st.session_state.call_status = None
+if "user_name" not in st.session_state:
+    st.session_state.user_name = None
+if "show_debug_info" not in st.session_state:
+    st.session_state.show_debug_info = False
 
 # Check if we need to speak something (with ID to prevent repetition)
 current_speech_id = st.session_state.speech_id
@@ -137,10 +213,21 @@ st.subheader("🗨️ Conversation")
 for sender, message in st.session_state.chat:
     if sender == "You":
         st.markdown(f"**{sender}**: {message}")
+    elif sender == "_debug_info" and st.session_state.show_debug_info:
+        # Display debug info in smaller, gray text
+        st.markdown(f"<span style='color:gray; font-size:0.8em;'>{message}</span>", unsafe_allow_html=True)
     else:
         # Format agent messages
         cleaned_message = message.replace("[final_answer]", "")
         st.markdown(f"**{sender}**: {cleaned_message}")
+
+# Display call status if available
+if st.session_state.call_status:
+    success, details = st.session_state.call_status
+    if success:
+        st.success(f"📞 Call initiated successfully! Call ID: {details}")
+    else:
+        st.error(f"❌ Call failed: {details}")
 
 if st.session_state.thinking:
     st.markdown("**Assistant**: 🤔 ...thinking")
@@ -152,16 +239,22 @@ if not st.session_state.get("conversation_ended", False):
     # --- Form: Text Input and Buttons ---
     with st.form(key="chat_form", clear_on_submit=True):
         user_input = st.text_input("Type your message", key="input_box", label_visibility="collapsed")
-        col1, col2 = st.columns([1, 1])
+        col1, col2, col3 = st.columns([1, 1, 1])
         with col1:
             send_clicked = st.form_submit_button("Send")
         with col2:
             mic_clicked = st.form_submit_button("🎤")
-            if mic_clicked:
-                st.session_state.mic_clicked = True
+        with col3:
+            call_clicked = st.form_submit_button("📞 Call", disabled=not twilio_enabled)
+    
+    # --- Call Button Handling ---
+    if 'call_clicked' in locals() and call_clicked:
+        success, details = make_twilio_call()
+        st.session_state.call_status = (success, details)
+        st.rerun()
     
     # --- Mic Click Handling ---
-    if st.session_state.get("mic_clicked", False):
+    if st.session_state.get("mic_clicked", False) or ('mic_clicked' in locals() and mic_clicked):
         transcribed_text = record_audio_sr()
         st.session_state.chat.append(("You", transcribed_text))
         st.session_state.thinking = True
@@ -228,6 +321,10 @@ if st.session_state.thinking:
             # Add to chat history
             st.session_state.chat.append((agent_name, message))
             
+            # Add debug info to the chat if it exists
+            if "_debug_info" in response_data and st.session_state.show_debug_info:
+                st.session_state.chat.append(("_debug_info", response_data["_debug_info"]))
+            
             # Check if this is a final answer (but not a question)
             if "[final_answer]" in message and "?" not in message:
                 # Automatically ask if there's anything else to help with
@@ -265,9 +362,26 @@ with st.sidebar:
         st.success("Speech engine reset.")
         st.rerun()
     
+    if twilio_enabled:
+        st.subheader("Call Settings")
+        recipient_number = st.text_input("Recipient Phone Number", value=to_number if to_number else "+1234567890", 
+                                       help="Enter the phone number to call (with country code)")
+        
+        if st.button("Update Call Number"):
+            to_number = recipient_number
+            st.success(f"Call number updated to {to_number}")
+    else:
+        st.subheader("Call Settings")
+        st.warning("Twilio is not configured. Set environment variables to enable calling.")
+    
+    st.subheader("Debug Settings")
+    st.session_state.show_debug_info = st.checkbox("Show Response Debug Info", value=st.session_state.show_debug_info)
+    
     st.subheader("Connection Info")
     st.write(f"API URL: {API_URL}")
     st.write(f"Session ID: {st.session_state.session_id}")
+    if st.session_state.user_name:
+        st.write(f"User Name: {st.session_state.user_name}")
     
     if st.button("Reset Conversation"):
         st.session_state.chat = []
@@ -276,5 +390,7 @@ with st.sidebar:
         st.session_state.session_id = str(uuid.uuid4())
         st.session_state.conversation_ended = False
         st.session_state.waiting_for_closing_response = False
+        st.session_state.call_status = None
+        st.session_state.user_name = None
         st.success("Conversation reset!")
         st.rerun()

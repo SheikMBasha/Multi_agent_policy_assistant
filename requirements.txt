@@ -1,9 +1,10 @@
 openai
 python-dotenv
-pyautogen==0.2.9
+pyautogen==0.8.7
 
 langchain==0.1.17
 langchain-community==0.0.36
+langchain-openai
 faiss-cpu
 PyPDF2
 beautifulsoup4

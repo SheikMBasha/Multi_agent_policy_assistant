@@ -1,5 +1,6 @@
+from typing import Dict, Any, Optional
 #!/usr/bin/env python3
-"""Main script for the automotive voice assistant"""
+# simplified_main.py - Main orchestration script for automotive voice assistant
 
 import os
 import sys
@@ -11,9 +12,11 @@ from datetime import datetime
 
 from config.llm_config import get_llm_config
 from config.system_config import get_system_config
-from context.conversation_context import ConversationContext
-from agents import create_agents
+
+# Import from simplified_agents instead of context
+from simplified_agents import ConversationContext, create_simplified_agents
 from tools.calculateincentivetool import CalculateIncentiveTool
+
 
 # Global context for signal handlers
 global_context = None
@@ -72,11 +75,11 @@ def initialize_system(args):
 
     system_config = get_system_config()
 
-    # Create the tools
+    #create the tools
     incentive_tool = CalculateIncentiveTool(api_url="http://localhost:8000/calculate-incentive")
 
-    # Create agents with context
-    agents = create_agents(llm_config, context, incentive_tool)
+    # Create simplified agents with context
+    agents = create_simplified_agents(llm_config, context, incentive_tool)
 
     return context, agents, system_config
 
@@ -183,18 +186,21 @@ def run_conversation(context, agents, system_config, args):
         # If the response is a question, update last_questioning_agent
         if "?" in response:
             last_questioning_agent = selected_agent_name
-        else:
-            last_questioning_agent = None
 
         # Display the response to the user
         print(f"\n{selected_agent_name}: {response}")
 
         # Check if the response contains [final_answer] to identify it as the final response
         if "[final_answer]" in response:
-            last_questioning_agent = None
+            # No follow-up prompt here, just identify final answer
+            context.add_to_history(selected_agent_name, response)
 
         # Log the interaction
         log_interaction(args.log_file, user_message, selected_agent_name, response)
+
+
+
+
 
 def main():
     """Main function to run the automotive agent system"""

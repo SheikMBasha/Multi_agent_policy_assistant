@@ -119,3 +119,83 @@ Tags: login, 500 error, production issue
 
 JIRA TICKET: Successfully created Jira ticket: SCRUM-3
 ================================================================================
+
+=== 2025-04-27 18:08:05 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: 🚀 Your 30-day Jira Premium trial starts now
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Start 30-day Jira Premium trial
+Description: Welcome to your 30-day Jira Premium trial! Premium is all about equipping teams with scalable tools for planning and tracking cross-functional work. Follow the provided links to create a plan, add issues, multiple teams and projects, schedule work, map dependencies, and share the plan with stakeholders. Start working in Jira by visiting the provided workspace link.
+Priority: Medium
+Tags: Jira, Premium, Trial, Planning, Tracking
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-4
+================================================================================
+
+=== 2025-04-27 18:08:17 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: How to create a top-level plan in Jira
+
+EXTRACTED OUTPUT:
+```jira
+Summary: How to create a top-level plan in Jira
+Description: Atlassian has introduced a top-level planning template in Jira to help teams coordinate efforts, visualize high-level work, plan and track work across multiple teams and projects, and build custom reports for stakeholders. The email provides a link to create a top-level plan using the template.
+Priority: Medium
+Tags: Jira, planning, coordination, template
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-5
+================================================================================
+
+=== 2025-04-27 18:08:21 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: 🧠 Work smarter with AI in Jira Premium
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Activate AI in Jira Premium and Enterprise Plans
+Description: Atlassian Intelligence (AI) is now accessible in Jira Premium and Enterprise plans. Users can enable AI on their Jira site to generate release notes, write user stories, create TL;DRs, and use natural language issue search to find issues and dependencies quickly. The email provides resources for learning more about Atlassian Intelligence and how to activate it for products.
+Priority: Medium
+Tags: Jira, AI, Premium, Enterprise
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-6
+================================================================================
+
+=== 2025-04-27 18:08:27 ===
+EMAIL:
+From: "Ashly Crow" <info@e.atlassian.com>
+Subject: 🗣️ How to create your first issue in Jira
+
+EXTRACTED OUTPUT:
+```jira
+Summary: How to create your first issue in Jira
+Description: The email provides tips on how to use Jira to create and manage issues effectively. It includes advice on breaking down work into smaller issues, pinning important fields, utilizing issue hierarchy, and configuring issue types. It also encourages the reader to create their first issue in Jira using the provided link. Additionally, assistance from Atlassian experts is offered for those needing help.
+Priority: Medium
+Tags: Jira, first issue, project planning, issue management
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-7
+================================================================================
+
+=== 2025-04-27 18:08:33 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are unable to log in via the main portal (https://portal.example.com/login) due to a "500 Internal Server Error" after submitting their credentials. The issue started after a recent deployment around 11 AM IST today, affecting all customer logins. Urgent attention and resolution are requested.
+Priority: High
+Tags: production issue, login error, urgent
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-8
+================================================================================

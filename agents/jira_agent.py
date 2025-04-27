@@ -1,6 +1,6 @@
 # jira_agent.py
 from autogen import AssistantAgent
-from shared import llm_config
+from shared.llm_config import llm_config
 import requests
 from requests.auth import HTTPBasicAuth
 import json

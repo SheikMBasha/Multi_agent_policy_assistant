@@ -1,5 +1,5 @@
 from autogen import GroupChat, GroupChatManager, UserProxyAgent
-from agents.router_agent import router_agent
+from agents.moderator_agent import router_agent
 from agents.pricing_agent import pricing_agent
 from agents.policy_agent import policy_agent
 from agents.dealer_agent import dealer_agent

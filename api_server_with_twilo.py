@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from typing import Optional, Dict, Any, List
 import time
 import os
+import re
 from twilio.twiml.voice_response import VoiceResponse, Gather
 
 # Import your agent system
@@ -118,6 +119,22 @@ def process_message(user_message, session_id="default", user_name=None):
         }
         agent_key = agent_mapping.get(selected_agent_name, "smalltalk")
         print(f"Agent key is {agent_key}")
+
+        # Check for goodbye intent to handle specially
+        goodbye_phrases = ["thank you", "thanks", "goodbye", "bye", "i'm good", "i think i'm good", "that's all", "no i'm good"]
+        is_goodbye = any(phrase in user_message.lower() for phrase in goodbye_phrases)
+    
+        if is_goodbye:
+            # Handle goodbye specially
+            goodbye_response = f"Thank you for your time, {context.user_name if context.user_name else 'there'}! Have a great day. Goodbye!"
+            return {
+                "agent": "SmallTalkAgent",
+                "response": goodbye_response,
+                "context": {"user_name": context.user_name},
+                "response_time_ms": (time.time() - start_time) * 1000,
+                "cache_hit": False
+            }
+    
         
         # Get the response from the selected agent
         response = agents[agent_key].generate_response(user_message)
@@ -179,6 +196,8 @@ async def voice(request: Request):
     # Create or get session context for this call
     if session_id not in phone_sessions:
         phone_sessions[session_id] = ConversationContext()
+        # Initialize metadata for tracking entity recognition failures
+        phone_sessions[session_id].metadata = {"entity_failures": 0}
         print(f"Created new phone session: {session_id}")
     
     response = VoiceResponse()
@@ -186,30 +205,92 @@ async def voice(request: Request):
     if user_input:
         print(f"User said: {user_input}")
         
-        # Get the agent's response using our central processing function
-        result = process_message(user_input, session_id)
-        agent_reply = result["response"]
+        # Get context for this session
+        context = phone_sessions[session_id]
         
-        # Clean the tags for speaking
-        bot_reply = agent_reply.replace("[final_answer]", "").replace("[user_input_needed]", "").strip()
-        print(f"Bot says: {bot_reply}")
-        
-        # Check for goodbye intent
-        goodbye_phrases = ["thank you", "thanks", "goodbye", "bye", "i'm good", "i think i'm good", "that's all"]
+        # Check for goodbye intent first
+        goodbye_phrases = ["thank you", "thanks", "goodbye", "bye", "i'm good", "i think i'm good", "that's all", "no i'm good"]
         is_goodbye = any(phrase in user_input.lower() for phrase in goodbye_phrases)
         
-        # Say the bot's response
-        response.say(bot_reply)
-        
-        # If it's a goodbye, end the call
         if is_goodbye:
-            response.pause(length=1)
+            # Handle goodbye directly
+            farewell_message = f"Thank you for calling, {context.user_name if hasattr(context, 'user_name') and context.user_name else ''}. Have a great day!"
+            response.say(farewell_message)
             response.hangup()
             # Clean up the session
             if session_id in phone_sessions:
                 del phone_sessions[session_id]
                 print(f"Deleted phone session: {session_id}")
             return str(response)
+        
+        # Preprocess user input for better entity recognition
+        processed_input = user_input
+        
+        # Normalize dealer name mentions
+        dealer_patterns = [
+            (r'\b(?:the|at|from)\s+([A-Za-z]+(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars)?)\b', r'dealer is \1'),
+            (r'\b([A-Za-z]+(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars))\b', r'dealer is \1')
+        ]
+        
+        for pattern, replacement in dealer_patterns:
+            if re.search(pattern, processed_input, re.IGNORECASE):
+                processed_input = re.sub(pattern, replacement, processed_input, flags=re.IGNORECASE)
+                print(f"Normalized dealer input: {processed_input}")
+        
+        # Get the agent's response using our central processing function
+        try:
+            print("Begin Process_message")
+            result = process_message(processed_input, session_id)
+            
+            # Verify result is a dictionary
+            if isinstance(result, str):
+                print(f"WARNING: process_message returned a string instead of a dict: {result}")
+                agent_reply = result
+            else:
+                agent_reply = result.get("response", "I'm sorry, I'm having trouble processing that request.")
+        except Exception as e:
+            print(f"Error in process_message: {e}")
+            agent_reply = f"I'm sorry, but I'm having trouble understanding. Can I help you with something else?"
+        
+        # Clean the tags for speaking
+        bot_reply = agent_reply.replace("[final_answer]", "").replace("[user_input_needed]", "").strip()
+        print(f"Bot says: {bot_reply}")
+        
+        # Say the bot's response
+        response.say(bot_reply)
+        
+        # Check for repeated entity recognition failures
+        is_asking_for_dealer = "dealer name" in bot_reply.lower() or "dealership" in bot_reply.lower()
+        if is_asking_for_dealer and context.metadata["entity_failures"] >= 2:
+            # Switch to guided approach after multiple failures
+            response.pause(length=1)
+            response.say("I'm having trouble understanding the dealer name. Let me offer some options.")
+            
+            gather = Gather(
+                input="speech",
+                timeout=8,
+                speech_timeout="auto",
+                action="/voice",
+                method="POST",
+                hints="Tesla, Ford, Toyota, Honda, BMW, Mercedes, Chevrolet",
+                speech_model="phone_call",
+                language="en-US en-IN"
+            )
+            
+            gather.say("Please say one of these dealers: Tesla, Ford, Toyota, Honda, BMW, Mercedes, or Chevrolet.")
+            response.append(gather)
+            
+            # Reset counter since we're now using guided approach
+            context.metadata["entity_failures"] = 0
+            
+            # Fallback
+            response.say("I didn't catch that. Thanks for calling!")
+            response.hangup()
+            
+            return str(response)
+        elif is_asking_for_dealer:
+            # Increment failure counter if still asking for dealer
+            context.metadata["entity_failures"] += 1
             
         # Determine the type of response and handle accordingly
         if "[final_answer]" in agent_reply:
@@ -241,6 +322,8 @@ async def voice(request: Request):
             
             if "rates" in bot_reply.lower() or "APR" in bot_reply or "rate" in bot_reply.lower():
                 hints = "contract rate is 7%, buy rate is 5%, apr is 6.5%, seven percent, five percent"
+            elif "dealer" in bot_reply.lower() or "dealership" in bot_reply.lower():
+                hints = "dealer name is Tesla, dealer is Ford, dealership is Toyota, Tesla Motors, Honda Dealership"
             else:
                 hints = "yes, no, help, information, I need, I want, I'm looking for"
                 
@@ -304,6 +387,7 @@ async def voice(request: Request):
         response.hangup()
 
     return str(response)
+
 
 @app.get("/")
 async def root():

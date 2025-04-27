@@ -80,17 +80,44 @@ Remember: ALWAYS include [final_answer] at the end of EVERY response without exc
         message_lower = message.lower()
 
         print(f"Pricing Agent: _extract_info_from_message : Message is {message} ")
-        # Extract dealer name if present - fixed pattern
-        dealer_match = re.search(r'dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)', message_lower)
-        if dealer_match:
-            # Clean up the dealer name (remove extra spaces, capitalize properly)
-            dealer_name = dealer_match.group(1).strip()
-            # Convert to title case (capitalize first letter of each word)
-            dealer_name = ' '.join(word.capitalize() for word in dealer_name.split())
-            self.context.dealer_name = dealer_name
-            print(f"Dealer name extracted: {dealer_name}")
-        else:
-            print("No dealer name pattern matched in the message")
+        # More flexible dealer name patterns
+        dealer_patterns = [
+            # Original pattern - "dealer name is X"
+            r'dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)',
+            # Just the brand name alone (common in responses to multiple choice)
+            r'^(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)$',
+            # "I choose X" or "X please" patterns
+            r'(?:i\s+(?:choose|select|want|pick)\s+)(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)',
+            r'(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)(?:\s+please)',
+            # Common spoken patterns
+            r'(?:it\'s|its|is)\s+(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)'
+        ]
+
+            # Try each pattern
+        for pattern in dealer_patterns:
+            dealer_match = re.search(pattern, message_lower)
+            if dealer_match:
+                # Clean up the dealer name
+                dealer_name = dealer_match.group(1).strip()
+                # Convert to title case
+                dealer_name = ' '.join(word.capitalize() for word in dealer_name.split())
+                self.context.dealer_name = dealer_name
+                print(f"Dealer name extracted: {dealer_name} using pattern: {pattern}")
+                return  # Exit once we find a match
+        
+        print("No dealer name pattern matched in the message")
+
+        # # Extract dealer name if present - fixed pattern
+        # dealer_match = re.search(r'dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)', message_lower)
+        # if dealer_match:
+        #     # Clean up the dealer name (remove extra spaces, capitalize properly)
+        #     dealer_name = dealer_match.group(1).strip()
+        #     # Convert to title case (capitalize first letter of each word)
+        #     dealer_name = ' '.join(word.capitalize() for word in dealer_name.split())
+        #     self.context.dealer_name = dealer_name
+        #     print(f"Dealer name extracted: {dealer_name}")
+        # else:
+        #     print("No dealer name pattern matched in the message")
 
         # Extract APR information if present
         apr_match = re.search(r'(?:contract apr|apr|interest)(?:\s+is|\s*[:=])?\s*(\d+\.?\d*)', message_lower)

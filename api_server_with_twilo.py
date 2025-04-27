@@ -226,9 +226,22 @@ async def voice(request: Request):
         # Preprocess user input for better entity recognition
         processed_input = user_input
         
+        # Check if we previously offered dealer options and the user might be selecting one
+        if hasattr(context, 'metadata') and "dealer_options" in context.metadata and context.metadata["dealer_options"]:
+            dealer_options = context.metadata["dealer_options"]
+            # Check if any of our options appear in the user's message
+            for dealer in dealer_options:
+                if dealer.lower() in processed_input.lower():
+                    processed_input = f"dealer name is {dealer}"
+                    print(f"Matched dealer option: {dealer}, converted input to: {processed_input}")
+                    break
+        
         # Normalize dealer name mentions
+        # Fixed patterns with more specific matching
         dealer_patterns = [
-            (r'\b(?:the|at|from)\s+([A-Za-z]+(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars)?)\b', r'dealer is \1'),
+            # Only match common car brands to avoid false positives
+            (r'\b(?:the|at|from)\s+(Tesla|Ford|Toyota|Honda|BMW|Mercedes|Chevrolet|Volkswagen|Audi|Nissan|Hyundai|Kia|Lexus|Mazda)(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars)?\b', r'dealer is \1'),
+            # Only match if followed by a dealership indicator term
             (r'\b([A-Za-z]+(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars))\b', r'dealer is \1')
         ]
         
@@ -261,10 +274,14 @@ async def voice(request: Request):
         
         # Check for repeated entity recognition failures
         is_asking_for_dealer = "dealer name" in bot_reply.lower() or "dealership" in bot_reply.lower()
-        if is_asking_for_dealer and context.metadata["entity_failures"] >= 2:
+        if is_asking_for_dealer and hasattr(context, 'metadata') and context.metadata["entity_failures"] >= 1:
             # Switch to guided approach after multiple failures
             response.pause(length=1)
             response.say("I'm having trouble understanding the dealer name. Let me offer some options.")
+            
+            # Store the dealer options in the session for later verification
+            dealer_options = ["Tesla", "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Chevrolet"]
+            context.metadata["dealer_options"] = dealer_options
             
             gather = Gather(
                 input="speech",
@@ -272,7 +289,7 @@ async def voice(request: Request):
                 speech_timeout="auto",
                 action="/voice",
                 method="POST",
-                hints="Tesla, Ford, Toyota, Honda, BMW, Mercedes, Chevrolet",
+                hints=", ".join(dealer_options),  # Join all options as hints
                 speech_model="phone_call",
                 language="en-US en-IN"
             )
@@ -288,7 +305,7 @@ async def voice(request: Request):
             response.hangup()
             
             return str(response)
-        elif is_asking_for_dealer:
+        elif is_asking_for_dealer and hasattr(context, 'metadata'):
             # Increment failure counter if still asking for dealer
             context.metadata["entity_failures"] += 1
             

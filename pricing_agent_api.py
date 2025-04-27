@@ -8,6 +8,7 @@ dealer_data = {
     "ford": 1500.00,
     "tesla": 1750.50,
     "honda": 1325.75,
+    "Jeep": 1005.51
 }
 
 @app.get("/calculate-incentive")

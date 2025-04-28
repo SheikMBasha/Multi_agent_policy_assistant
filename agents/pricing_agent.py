@@ -84,13 +84,14 @@ Remember: ALWAYS include [final_answer] at the end of EVERY response without exc
         dealer_patterns = [
             # Original pattern - "dealer name is X"
             r'dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)',
+            r'the dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)',
             # Just the brand name alone (common in responses to multiple choice)
-            r'^(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)$',
+            r'^(Prestige Motors|Groupon Automotive|Sonic Automotive|Lithium Motors|bmw|mercedes|chevrolet)$',
             # "I choose X" or "X please" patterns
-            r'(?:i\s+(?:choose|select|want|pick)\s+)(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)',
+            r'(?:i\s+(?:choose|select|want|pick)\s+)(Prestige Motors|Groupon Automotive|Sonic Automotive|Lithium Motors)',
             r'(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)(?:\s+please)',
             # Common spoken patterns
-            r'(?:it\'s|its|is)\s+(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)'
+            r'(?:it\'s|its|is)\s+(prestige motors|groupon automotive|sonic automotive|lithium motors)'
         ]
 
             # Try each pattern

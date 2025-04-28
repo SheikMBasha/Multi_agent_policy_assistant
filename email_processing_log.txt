@@ -199,3 +199,51 @@ Tags: production issue, login error, urgent
 
 JIRA TICKET: Successfully created Jira ticket: SCRUM-8
 ================================================================================
+
+=== 2025-04-27 21:11:54 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are encountering a "500 Internal Server Error" when attempting to log in via the main portal (https://portal.example.com/login) after recent deployment at 11 AM IST. The issue is impacting all customer logins. Requesting investigation and prompt resolution.
+Priority: High
+Tags: Login, 500 Error, Production Environment
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-9
+================================================================================
+
+=== 2025-04-28 11:27:43 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Fwd: Urgent: Login page throwing 500 error
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Login page throwing 500 error on production environment
+Description: Users are encountering a "500 Internal Server Error" while trying to log in via the main portal (https://portal.example.com/login) after submitting their credentials. The issue started after a recent deployment around 11 AM IST on the same day. Urgent investigation and resolution are required.
+Priority: Urgent
+Tags: Login, 500 error, Production, Deployment
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-10
+================================================================================
+
+=== 2025-04-28 15:11:01 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Unwind/Rebook
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Request for Unwind of Loan Associated with James Ford
+Description: The email requests an unwind of the loan associated with the dealer James Ford, borrower Steve Jobs, contract number +14544434542, and funding date 10-02-2025. The sender also asks for information on any additional documentation required for the unwind process and advises on the next steps if a rebook is needed.
+Priority: Medium
+Tags: loan, unwind, rebook
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-11
+================================================================================

@@ -240,7 +240,7 @@ async def voice(request: Request):
         # Fixed patterns with more specific matching
         dealer_patterns = [
             # Only match common car brands to avoid false positives
-            (r'\b(?:the|at|from)\s+(Tesla|Ford|Toyota|Honda|BMW|Mercedes|Chevrolet|Volkswagen|Audi|Nissan|Hyundai|Kia|Lexus|Mazda)(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars)?\b', r'dealer is \1'),
+            (r'\b(?:the|at|from)\s+(Prestige Motors|Groupon Automotive|Sonic Automotive|Lithium Motors|Chevrolet|Volkswagen|Audi|Nissan|Hyundai|Kia|Lexus|Mazda)(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars)?\b', r'dealer is \1'),
             # Only match if followed by a dealership indicator term
             (r'\b([A-Za-z]+(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars))\b', r'dealer is \1')
         ]
@@ -274,13 +274,13 @@ async def voice(request: Request):
         
         # Check for repeated entity recognition failures
         is_asking_for_dealer = "dealer name" in bot_reply.lower() or "dealership" in bot_reply.lower()
-        if is_asking_for_dealer and hasattr(context, 'metadata') and context.metadata["entity_failures"] >= 1:
+        if is_asking_for_dealer and hasattr(context, 'metadata') and context.metadata["entity_failures"] >= 4:
             # Switch to guided approach after multiple failures
             response.pause(length=1)
             response.say("I'm having trouble understanding the dealer name. Let me offer some options.")
             
             # Store the dealer options in the session for later verification
-            dealer_options = ["Tesla", "Ford", "Toyota", "Honda", "BMW", "Mercedes", "Chevrolet"]
+            dealer_options = ["Prestige Motors, Groupon Automotive, Sonic Automotive, Lithium Motors"]
             context.metadata["dealer_options"] = dealer_options
             
             gather = Gather(
@@ -294,7 +294,7 @@ async def voice(request: Request):
                 language="en-US en-IN"
             )
             
-            gather.say("Please say one of these dealers: Tesla, Ford, Toyota, Honda, BMW, Mercedes, or Chevrolet.")
+            gather.say("Please say one of these dealers: prestige motors, groupon automotive, sonic automotive, lithium motors")
             response.append(gather)
             
             # Reset counter since we're now using guided approach
@@ -325,6 +325,7 @@ async def voice(request: Request):
                 speech_model="phone_call",
                 language="en-US en-IN"  # Support both US and Indian English
             )
+            
             
             gather.say("Is there anything else I can help you with today?")
             response.append(gather)
@@ -376,7 +377,8 @@ async def voice(request: Request):
                 language="en-US en-IN"
             )
             
-            gather.say("What else would you like to know?")
+            if "[final_answer]" in agent_reply:
+                gather.say("What else would you like to know?")
             response.append(gather)
             
             # Fallback

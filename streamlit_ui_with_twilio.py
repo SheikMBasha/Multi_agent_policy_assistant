@@ -72,7 +72,7 @@ def make_twilio_call():
         call = client.calls.create(
             to=to_number,
             from_=twilio_number,
-            url="https://77b5-2401-4900-8fce-4980-3c47-2962-6948-f4d5.ngrok-free.app/voice"
+            url="https://ad8e-2405-201-c404-8812-4dcf-9abe-782d-8aca.ngrok-free.app/voice"
         )
         return True, call.sid
     except Exception as e:
@@ -154,9 +154,9 @@ def is_conversation_ending_indication(message):
     return False
 
 # Streamlit UI
-st.set_page_config(page_title="Automotive Voice Assistant", layout="centered")
+st.set_page_config(page_title="WAVE", layout="centered")
 
-st.markdown("<h1 style='text-align: center;'>🚗 Automotive Voice Assistant</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🚗 WAVE</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
 # Check if API is reachable

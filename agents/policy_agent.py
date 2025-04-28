@@ -13,7 +13,7 @@ class PolicyAgent(SimplifiedAgent):
             name="PolicyAgent",
             system_message="""
 You are the PolicyAgent. 
-Answer using provided document context. 
+Answer using provided document context. Summarize the answer in a few sentences. Make it short and concise. 
 Always say '[final_answer]' at the end.
 """,
             llm_config=llm_config,

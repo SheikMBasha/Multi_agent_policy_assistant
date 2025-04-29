@@ -72,7 +72,7 @@ def make_twilio_call():
         call = client.calls.create(
             to=to_number,
             from_=twilio_number,
-            url="https://ad8e-2405-201-c404-8812-4dcf-9abe-782d-8aca.ngrok-free.app/voice"
+            url="https://9f9b-2401-4900-8fce-4980-3c47-2962-6948-f4d5.ngrok-free.app/voice"
         )
         return True, call.sid
     except Exception as e:
@@ -156,7 +156,7 @@ def is_conversation_ending_indication(message):
 # Streamlit UI
 st.set_page_config(page_title="WAVE", layout="centered")
 
-st.markdown("<h1 style='text-align: center;'>🚗 WAVE</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>🚗 AutoFinance Virtual Engagement</h1>", unsafe_allow_html=True)
 st.markdown("---")
 
 # Check if API is reachable
@@ -174,7 +174,7 @@ except Exception as e:
 if "chat" not in st.session_state:
     st.session_state.chat = []
     # Add the initial greeting
-    st.session_state.chat.append(("SmallTalkAgent", "Hello! Welcome to our automotive assistant. May I know your name, please?"))
+    st.session_state.chat.append(("Agent", "Hello! Welcome to our automotive assistant. May I know your name, please?"))
     
 if "thinking" not in st.session_state:
     st.session_state.thinking = False
@@ -225,7 +225,7 @@ for sender, message in st.session_state.chat:
 if st.session_state.call_status:
     success, details = st.session_state.call_status
     if success:
-        st.success(f"📞 Call initiated successfully! Call ID: {details}")
+        st.success(f"📞📲 Call initiated successfully! Call ID: {details}")
     else:
         st.error(f"❌ Call failed: {details}")
 

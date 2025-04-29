@@ -1,4 +1,3 @@
-# jira_agent.py
 from autogen import AssistantAgent
 from shared.llm_config import llm_config
 import requests
@@ -113,6 +112,10 @@ def upload_attachment(issue_key, attachment):
 
 def parse_jira_ticket_format(ticket_text):
     """Parse Jira ticket format from text"""
+    # Check if ticket_text is None or empty
+    if not ticket_text:
+        return {}
+        
     # Extract ticket data from the formatted text
     ticket_data = {}
 

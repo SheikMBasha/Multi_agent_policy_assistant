@@ -125,17 +125,23 @@ Summary: [extracted summary]
 Description: [extracted description]
 Priority: [extracted priority]
 Tags: [extracted tags]
+```
     """
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system",
-             "content": "You are a helpful assistant that processes emails into structured Jira tickets."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system",
+                "content": "You are a helpful assistant that processes emails into structured Jira tickets. Make sure all the details from the email are captured in the description."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        # Return the response content
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"❌ Error calling OpenAI API: {e}")
+        traceback.print_exc()
+        return None
 
 
 def process_email_and_create_ticket(email_data):
@@ -155,6 +161,11 @@ def process_email_and_create_ticket(email_data):
             log_file.write(f"\n\n=== {time.strftime('%Y-%m-%d %H:%M:%S')} ===\n")
             log_file.write(f"EMAIL:\nFrom: {email_data['from']}\nSubject: {email_data['subject']}\n")
             log_file.write(f"\nEXTRACTED OUTPUT:\n{structured_data}\n")
+
+        # Check if we got valid data from GPT before trying to create a ticket
+        if not structured_data:
+            print("⚠️ No valid data received from GPT, cannot create ticket")
+            return None
 
         # Use the JiraAgent to create a ticket
         print("🎫 Creating Jira ticket...")

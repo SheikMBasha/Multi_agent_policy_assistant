@@ -247,3 +247,137 @@ Tags: loan, unwind, rebook
 
 JIRA TICKET: Successfully created Jira ticket: SCRUM-11
 ================================================================================
+
+=== 2025-04-28 17:24:32 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Unhook Loan
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Request for Unhook Loan associated with Steve Jobs
+Description: The email requests an unhook of the loan associated with the dealer name James Ford, borrower name Steve Jobs, contract number +14544434542, and funding date 10-02-2025. The sender asks for additional information or documentation if needed for processing the unwind and requests guidance on next steps if a rebook is necessary.
+Priority: Medium
+Tags: Loan, Unhook, Dealer Name, Borrower Name, Contract Number, Funding Date
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-12
+================================================================================
+
+=== 2025-04-28 17:28:09 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unwind Loan for Contract Number +14544434542
+Description: Request to unwind the loan associated with the following details:
+Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+
+Please process this unwind request. Additional information or documentation may be required.
+Priority: Medium
+Tags: Loan, Unwind, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-13
+================================================================================
+
+=== 2025-04-28 17:30:32 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unbook Loan for Steve Nolan (Loan Account Number: 12398768903)
+Description: The customer, Steve Nolan, has requested to unbook his auto loan associated with Sonic Automotive Group. Details provided include the Dealer Name, Borrower Name, Contract Number, Funding Date, and Loan Account Number. The customer is willing to provide additional information or documentation if required.
+Priority: Medium
+Tags: Auto Loan, Unbook, Sonic Automotive Group, Documentation
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-14
+================================================================================
+
+=== 2025-04-28 17:35:46 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unbook Auto Loan for Steve Nolan - 12398768903
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+
+Please let me know if you need additional information or documentation to process this unwind.
+
+Priority: Medium
+Tags: Auto Loan, Unbook, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-15
+================================================================================
+
+=== 2025-04-28 17:47:33 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+None
+
+
+=== 2025-04-28 17:56:26 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unbook Loan - 12398768903 for Steve Nolan
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+
+Please let me know if you need additional information or documentation to process this unwind.
+
+Thank you for your assistance.
+Priority: Medium
+Tags: loan, unbook, request, documentation
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-16
+================================================================================
+
+=== 2025-04-28 18:33:57 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Request for Unbook of Loan 12398768903
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+
+Please let me know if you need additional information or documentation to process this unwind
+
+Priority: Medium
+Tags: Unbook, Loan, Request, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-17
+================================================================================

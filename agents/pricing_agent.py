@@ -52,7 +52,7 @@ Remember: ALWAYS include [final_answer] at the end of EVERY response without exc
 
         # Check what information is missing
         if self.context.dealer_name is None:
-            return "Could you please provide the Dealer Name?"
+            return "Could you please provide the Dealer Name? [user_input_needed]"
         # if self.context.contract_apr is None:
         #     return "Could you please provide the contract APR?"
 

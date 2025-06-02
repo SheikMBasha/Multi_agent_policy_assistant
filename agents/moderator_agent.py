@@ -26,7 +26,7 @@ class ModeratorAgent(SimplifiedAgent):
             system_message="""
 You are the RouterAgent for a dealer voice assistant. Based on the user query, You determine which agent should respond to the user query.
 
-- @PricingAgent: Calculates the dealer compensation based on dealer name. It is the agent which will return the final answer.
+- @PricingAgent: Handles dealer compensation, GAP refund queries (asks for dealer name), and funding address questions (asks for RBC number). It is the agent which will return the final answer.
 - @PolicyAgent: Use if the user is asking about loan policies, rules, required documents, eligibility, term length, maximum age, conditions, or approval criteria.
 - @DealerAgent: Use if the user wants to log a complaint, report an issue, or give feedback about the dealership experience.
 
@@ -37,7 +37,11 @@ Examples:
 - "What's the current APR on a hatchback?" → PricingAgent
 - "The dealer was rude to me" → DealerAgent
 - "What is the loan term length?" → PolicyAgent
-- "Dealership or Dealer is or Dealership Name is or Dealer Name is: " -> PricingAgent
+- "Dealership or Dealer is or Dealership Name is or Dealer Name is: " → PricingAgent
+- "What is my GAP refund?" → PricingAgent
+- "What is the GAP refund for Sonic Automotive?" → PricingAgent
+- "Where should I send a paper contract for RBC123?" → PricingAgent
+- "What address do I send the funding packet to?" → PricingAgent
 # Be Precise and respond with ONLY the agent name.
             """,
             llm_config=llm_config,
@@ -313,6 +317,15 @@ Examples:
         # Common entertainment requests
         if any(term in message_lower for term in ["joke", "funny", "tell me a story", "sing", "game", "play"]):
             return "SmallTalkAgent", "off_topic"
+        
+         # NEW: Reuse prior intent/context for follow-up messages
+        if self.context.intent in ["gap_refund", "funding_address", "dealer_incentive"]:
+            print(f"Reusing context.intent = {self.context.intent}, routing to PricingAgent")
+            return "PricingAgent", None
+
+        if self.context.rbc_number or self.context.dealer_name:
+            print(f"Detected prior context (dealer or RBC), defaulting to PricingAgent")
+            return "PricingAgent", None
         
         # First check if message is inappropriate
         is_inappropriate, category = self.classify_content(message)

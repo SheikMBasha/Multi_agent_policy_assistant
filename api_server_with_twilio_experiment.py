@@ -35,7 +35,7 @@ rejection_phrases = ["no", "wrong", "that's wrong", "not right", "nope", "false"
 context = ConversationContext()
 llm_config = get_llm_config()
 system_config = get_system_config()
-incentive_tool = CalculateIncentiveTool(api_url="http://localhost:8000/calculate-compensation")
+incentive_tool = CalculateIncentiveTool(api_url="http://localhost:8000")
 agents = create_agents(llm_config, context, incentive_tool)
 
 #################################################
@@ -474,7 +474,7 @@ async def handle_call_transfer(call_sid: str, context: Any, confirmation: str) -
     # Only proceed with transfer if explicitly confirmed
     if confirmation == "confirmed" or "yes" in confirmation.lower() or "transfer" in confirmation.lower():
         # Set the transfer destination
-        transfer_number = "+918886793222" #"+919791125766"  # Replace with your actual support number
+        transfer_number = "+918197885663" #"+918886793222" #"+919791125766"  # Replace with your actual support number
         
         # Personalized transfer message
         name_part = f", {context.user_name}" if hasattr(context, 'user_name') and context.user_name else ""

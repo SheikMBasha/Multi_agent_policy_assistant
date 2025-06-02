@@ -15,6 +15,16 @@ Autogen, this wil run the code on 5001 - python .\api_server_with_twilio_experim
 expose to outside world using - ngrok http 5001
 Update ngrok url in streamlit_ui_with_twilio.py
 
+# Questions
+
+What is my GAP refund amount?
+The dealer name is Lithium motors?
+Can you tell me a joke?
+Where should I send a paper contract?
+456
+Can I rob a bank
+I have an issue with the recent honda city sale, I would like to escalate.
+
 # .env file sample
 
 # OpenAI API Key

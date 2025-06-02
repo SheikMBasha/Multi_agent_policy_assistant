@@ -6,6 +6,7 @@ from agents.base_agent import SimplifiedAgent
 from context.conversation_context import ConversationContext
 from tools.calculateincentivetool import CalculateIncentiveTool
 
+
 class PricingAgent(SimplifiedAgent):
     """Handles pricing related queries"""
 
@@ -13,119 +14,160 @@ class PricingAgent(SimplifiedAgent):
         super().__init__(
             name="PricingAgent",
             system_message="""
-You are the PricingAgent. You assist users in calculating dealer compensation.
+You are the PricingAgent. You assist users in calculating dealer compensation, GAP refund, or funding packet address.
 
 🚨 CRITICAL INSTRUCTION:
 You MUST end EVERY response with [final_answer]. This is required for proper conversation termination.
 
-You have access to a function named `calculate_dealer_compensation(dealer_name: string)` which makes an API call and returns compensation information.
-
 Behavior Instructions:
-1. Always start by asking the user for the dealer name if not already provided.
-2. Once you have the dealer name, call the tool `calculate_dealer_compensation(dealer_name)`.
-3. After receiving the result, share the compensation value with the user.
-4. ALWAYS end EVERY message with `[final_answer]`.
-5. Remember values from earlier in the conversation unless the user updates them.
-
-Examples of proper responses:
-
-User: "I need to check compensation"
-You: "I can help with that. What's the dealer name? [final_answer]"
-
-User: "The dealer is ABC Motors"
-You: *Call calculate_dealer_compensation("ABC Motors")*
-Then respond: "Based on our records, the compensation for ABC Motors is $XXX. [final_answer]"
-
-User: "Thanks"
-You: "You're welcome! Let me know if you need anything else. [final_answer]"
-
-Remember: ALWAYS include [final_answer] at the end of EVERY response without exception.
+1. Always start by asking the user for the dealer name (for GAP/compensation) or RBC number (for funding) if not already provided.
+2. Once required info is present, call the appropriate tool method:
+    - get_gap_refund(dealer_name)
+    - get_funding_address(rbc_number)
+    - run(dealer_name) for compensation
+3. After receiving the result, share it with the user.
+4. ALWAYS end EVERY message with [final_answer].
+5. Remember values from earlier in the conversation unless updated.
 """,
             llm_config=llm_config,
             context=context
         )
 
         self.incentive_tool = incentive_tool
+        if not hasattr(self.context, "intent"):
+            self.context.intent = None
 
     def generate_response(self, message: str) -> str:
         self._extract_info_from_message(message)
+        self._infer_intent(message)
+        message_lower = message.lower()
+        print(message_lower)
 
-        # Check what information is missing
-        if self.context.dealer_name is None:
-            return "Could you please provide the Dealer Name? [user_input_needed]"
-        # if self.context.contract_apr is None:
-        #     return "Could you please provide the contract APR?"
-
-        # if self.context.buy_rate is None:
-        #     return "Could you please provide the buy rate?"
-
-        # If both are available, call API
         try:
-            incentive = self.incentive_tool.run(self.context.dealer_name)
-            # incentive = self.incentive_tool.run(self.context.contract_apr, self.context.buy_rate)
-            result = f"The dealer incentive for the sale is ${incentive}.[final_answer]"
-            
-            # Reset context after final answer
-            self.context.contract_apr = None
-            self.context.buy_rate = None
-            
-            return result
+            intent = getattr(self.context, "intent", None)
+
+            # GAP refund flow
+            if intent == "gap_refund":
+                if self.context.dealer_name is None:
+                    return "To get the GAP refund, please provide the Dealer Name. [user_input_needed]"
+                dealer_name = self.context.dealer_name
+                refund = self.incentive_tool.get_gap_refund(dealer_name)
+                response = f"The GAP refund amount for {dealer_name} is ${refund}.[final_answer]"
+                self._clear_context_after_completion()
+                return response
+
+            # Funding address flow
+            if intent == "funding_address":
+                if self.context.rbc_number is None:
+                    return "To get the funding address, please provide the RBC number. [user_input_needed]"
+                rbc_number = self.context.rbc_number
+                address = self.incentive_tool.get_funding_address(rbc_number)
+                response = f"The mailing address for RBC number {rbc_number} is: {address}.[final_answer]"
+                self._clear_context_after_completion()
+                return response
+
+            # Dealer incentive flow
+            if intent == "dealer_incentive":
+                if self.context.dealer_name is None:
+                    return "Could you please provide the Dealer Name? [user_input_needed]"
+                dealer_name = self.context.dealer_name
+                incentive = self.incentive_tool.run(dealer_name)
+                response = f"The dealer incentive for the sale is ${incentive}.[final_answer]"
+                self._clear_context_after_completion()
+                return response
+
+            # Handle partial context inputs: try to re-trigger previous intent if data is now available
+            if self.context.intent is None:
+                if self.context.rbc_number is not None:
+                    self.context.intent = "funding_address"
+                    return self.generate_response("funding follow-up")
+                elif self.context.dealer_name is not None:
+                    last_msgs = self.context.get_recent_messages(2)
+                    if any("gap" in msg["message"].lower() for msg in last_msgs if msg["sender"] == "user"):
+                        self.context.intent = "gap_refund"
+                    else:
+                        self.context.intent = "dealer_incentive"
+                    return self.generate_response("dealer follow-up")
+
+            # No valid intent available
+            return "Can you please clarify your request (e.g., GAP refund, funding address, or dealer incentive)? [user_input_needed]"
+
         except Exception as e:
-            return f"Sorry, I encountered an error while calculating the incentive: {str(e)}"
+            return f"Sorry, I encountered an error while processing the request: {str(e)}"
+
+    def _clear_context_after_completion(self):
+        self.context.intent = None
+        self.context.rbc_number = None
+        self.context.dealer_name = None
 
     def _extract_info_from_message(self, message: str) -> None:
-        """Extract pricing-related information from the message"""
         super()._extract_info_from_message(message)
-        
         message_lower = message.lower()
+        print(f"Pricing Agent: _extract_info_from_message : Message is {message}")
 
-        print(f"Pricing Agent: _extract_info_from_message : Message is {message} ")
-        # More flexible dealer name patterns
+        # Dealer name patterns
         dealer_patterns = [
-            # Original pattern - "dealer name is X"
-            r'dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)',
-            r'the dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)',
-            # Just the brand name alone (common in responses to multiple choice)
-            r'^(Prestige Motors|Groupon Automotive|Sonic Automotive|Lithium Motors|bmw|mercedes|chevrolet)$',
-            # "I choose X" or "X please" patterns
-            r'(?:i\s+(?:choose|select|want|pick)\s+)(Prestige Motors|Groupon Automotive|Sonic Automotive|Lithium Motors)',
-            r'(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)(?:\s+please)',
-            # Common spoken patterns
-            r'(?:it\'s|its|is)\s+(prestige motors|groupon automotive|sonic automotive|lithium motors)'
+            r"dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)",
+            r"the dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)",
+            r"^(prestige motors|groupon automotive|sonic automotive|lithium motors|bmw|mercedes|chevrolet)$",
+            r"(?:i\s+(?:choose|select|want|pick)\s+)(prestige motors|groupon automotive|sonic automotive|lithium motors)",
+            r"(tesla|ford|toyota|honda|bmw|mercedes|chevrolet)(?:\s+please)",
+            r"(?:it's|its|is)\s+(prestige motors|groupon automotive|sonic automotive|lithium motors)"
         ]
 
-            # Try each pattern
         for pattern in dealer_patterns:
             dealer_match = re.search(pattern, message_lower)
             if dealer_match:
-                # Clean up the dealer name
                 dealer_name = dealer_match.group(1).strip()
-                # Convert to title case
                 dealer_name = ' '.join(word.capitalize() for word in dealer_name.split())
                 self.context.dealer_name = dealer_name
                 print(f"Dealer name extracted: {dealer_name} using pattern: {pattern}")
-                return  # Exit once we find a match
-        
-        print("No dealer name pattern matched in the message")
+                break
 
-        # # Extract dealer name if present - fixed pattern
-        # dealer_match = re.search(r'dealer(?:\s+name)?\s+(?:is|=|:)\s+([A-Za-z0-9\s]+)', message_lower)
-        # if dealer_match:
-        #     # Clean up the dealer name (remove extra spaces, capitalize properly)
-        #     dealer_name = dealer_match.group(1).strip()
-        #     # Convert to title case (capitalize first letter of each word)
-        #     dealer_name = ' '.join(word.capitalize() for word in dealer_name.split())
-        #     self.context.dealer_name = dealer_name
-        #     print(f"Dealer name extracted: {dealer_name}")
-        # else:
-        #     print("No dealer name pattern matched in the message")
+        # RBC number extraction (e.g., RBC123 or rbc 123)
+        rbc_match = re.search(r"\brbc[\s:.-]?(\d{3,6})\b", message_lower)
+        if rbc_match:
+            self.context.rbc_number = f"RBC{rbc_match.group(1)}"
+            print(f"Extracted RBC number: {self.context.rbc_number}")
+        else:
+            # If funding intent, treat any 3-6 digit number as RBC
+            numeric_match = re.search(r"\b(\d{3,6})\b", message_lower)
+            if numeric_match and getattr(self.context, "intent", None) == "funding_address":
+                self.context.rbc_number = f"RBC{numeric_match.group(1)}"
+                print(f"Inferred RBC number from plain digits: {self.context.rbc_number}")
 
-        # Extract APR information if present
-        apr_match = re.search(r'(?:contract apr|apr|interest)(?:\s+is|\s*[:=])?\s*(\d+\.?\d*)', message_lower)
+        # APR extraction
+        apr_match = re.search(r"(?:contract apr|apr|interest)(?:\s+is|\s*[:=])?\s*(\d+\.?\d*)", message_lower)
         if apr_match:
             self.context.contract_apr = float(apr_match.group(1))
 
-        # Extract buy rate information if present
-        buy_rate_match = re.search(r'(?:buy rate|buy|rate)(?:\s+is|\s*[:=])?\s*(\d+\.?\d*)', message_lower)
-        if buy_rate_match and "apr" not in message_lower[buy_rate_match.start()-5:buy_rate_match.start()]:
+        # Buy rate extraction
+        buy_rate_match = re.search(r"(?:buy rate|buy|rate)(?:\s+is|\s*[:=])?\s*(\d+\.?\d*)", message_lower)
+        if buy_rate_match and "apr" not in message_lower[buy_rate_match.start() - 5:buy_rate_match.start()]:
             self.context.buy_rate = float(buy_rate_match.group(1))
+
+    def _infer_intent(self, message: str) -> None:
+        message_lower = message.lower()
+        inferred = None
+        if "gap refund" in message_lower or ("gap" in message_lower and "refund" in message_lower):
+            inferred = "gap_refund"
+        elif any(kw in message_lower for kw in [
+            "funding", 
+            "rbc", 
+            "send paper contract", 
+            "mailing address", 
+            "funding packet", 
+            "packet", 
+            "send contract",
+            "where should i send",
+            "address to send",
+            "where do i send",
+            "funding address"
+        ]):
+            inferred = "funding_address"
+        elif "compensation" in message_lower or "dealer incentive" in message_lower or "incentive" in message_lower:
+            inferred = "dealer_incentive"
+
+        if inferred:
+            self.context.intent = inferred
+        print(f"Inferred intent: {self.context.intent}")

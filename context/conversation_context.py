@@ -26,6 +26,7 @@ class ConversationContext:
         self.buy_rate: Optional[float] = None
         self.policy_topic: Optional[str] = None
         self.dealer_name: Optional[str] = None
+        self.rbc_number: Optional[str] = None 
         self.escalation_requested: bool = False
 
     def add_to_history(self, sender: str, message: str) -> None:

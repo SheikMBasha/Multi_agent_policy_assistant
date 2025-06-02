@@ -72,7 +72,7 @@ def make_twilio_call():
         call = client.calls.create(
             to=to_number,
             from_=twilio_number,
-            url="https://da80-2401-4900-8fce-4980-a5a2-5dfa-e4e0-5132.ngrok-free.app/voice"
+            url="https://5c55-49-206-32-92.ngrok-free.app/voice"
         )
         return True, call.sid
     except Exception as e:

@@ -381,3 +381,302 @@ Tags: Unbook, Loan, Request, Sonic Automotive Group, Steve Nolan
 
 JIRA TICKET: Successfully created Jira ticket: SCRUM-17
 ================================================================================
+
+=== 2025-05-08 11:17:35 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: Missed out on Team '25? Join a live webinar with Atlassian leaders to catch up!
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Atlassian Team '25 Webinar Information and Announcements
+Description: Atlassian hosted the Team '25 conference, unveiling major announcements for customers. The email contains details about Rovo availability, Teamwork Collection, Strategy Collection, Platform Apps, AI in Jira Service Management, and new Cloud deployment options. It also includes information about a live webinar on May 7 with Atlassian leaders Anu Bharadwaj and Zeynep Inanoglu Ozdemir. Various links are provided for more information and registration.
+Priority: Medium
+Tags: Atlassian, Team '25, Webinar, Rovo, Collaboration, Strategy, Platform Apps, AI, Cloud
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-18
+================================================================================
+
+=== 2025-05-08 11:17:39 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: Automate away hours of work in Jira every month
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Automate away hours of work in Jira every month
+Description: Atlassian email promoting Jira automation capabilities to handle mundane, repetitive tasks through various Jira automation templates such as Smart auto-assign, Sync parent and child tasks, Auto-link related issues, and Notify teammates. The email encourages users to add more issues to their project and create new automation rules to experience the benefits of automation. It also includes links to create new issues in Jira and resources like the privacy policy and contact information.
+Priority: Medium
+Tags: Jira, Automation, Templates, Tasks
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-19
+================================================================================
+
+=== 2025-05-08 11:17:43 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: How to start working in Jira
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Settle into new Jira project and start collaborating
+Description: 
+Atlassian
+
+You have 1 teammate collaborating in 2 projects. It's time to settle into your new Jira project and start communicating with your team directly by commenting, tagging, and assigning action items to keep everyone flawlessly aligned. Make sure every unassigned work item has an owner.
+
+Follow the links below to get started:
+- Assign tasks: [https://demovoiceassistant.atlassian.net/jira/settings/projects/manage](https://demovoiceassistant.atlassian.net/jira/settings/projects/manage)
+- Learn more about building together on Jira: [https://www.atlassian.com/software/jira/guides/getting-started/who-uses-jira?utm_source=product-announcement-email&utm_medium=email&utm_campaign=jira-nth-user-onboarding-E2_EML-19357&jobid=107110031&subid=1951718446&send_date=5/2/2025]
+- Visit your project: [https://demovoiceassistant.atlassian.net/jira/settings/projects/manage]
+
+If you no longer wish to receive these emails, you can update your preferences or unsubscribe using the provided links.
+Priority: Medium
+Tags: Jira, collaboration, teamwork, tasks, communication
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-20
+================================================================================
+
+=== 2025-05-08 11:17:46 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: ⏳You're halfway through your Premium trial
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Create first plan in Jira Premium trial
+Description: The email reminds the user that they are halfway through their Jira Premium trial and encourages them to create their first plan in Jira to gain visibility of work and dependencies across multiple teams and projects, keep teams aligned on company-wide goals and individual subtasks, and pivot quickly when plans change with capacity management and scenario modeling. The email includes multiple links to create the plan and learn more about Jira Premium features.
+Priority: Medium
+Tags: Jira, Premium, Trial, Planning
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-21
+================================================================================
+
+=== 2025-05-08 11:17:49 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: See how your work flows 🌊
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Understand team workflows in Jira
+Description: Atlassian encourages users to familiarize themselves with their team's workflows in Jira to enhance teamwork. Users can access Board view to see the different status columns, which represent how work flows in Jira. The email provides a link to manage project settings for further exploration. Workflows are described as the steps tasks must undergo from initial idea to completion, and customization options are highlighted. Users are advised to understand workflow rules to effectively contribute to their team's projects.
+Priority: Medium
+Tags: Jira, Workflows, Teamwork, Project Management
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-22
+================================================================================
+
+=== 2025-05-08 11:17:52 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unbook Loan for Steve Nolan - 12398768903
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+Please let me know if you need additional information or documentation to process this unwind.
+Priority: Medium
+Tags: Loan, Unbook, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-23
+================================================================================
+
+=== 2025-05-08 11:22:05 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unbook Loan for Contract Number +14544434542
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+
+Please unbook the loan associated with the provided details. Let me know if any additional information or documentation is required for processing the unwind.
+
+Priority: Medium
+Tags: Unbook, Loan, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-24
+================================================================================
+
+=== 2025-05-08 14:17:34 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unbook Loan for Contract Number +14544434542
+Description: A request has been made to unbook the loan associated with the following details:
+Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+Additional information or documentation may be required to process the unwind. 
+Priority: Medium
+Tags: Loan, Unbook, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-25
+================================================================================
+
+=== 2025-05-08 14:57:42 ===
+EMAIL:
+From: Yuvraj Lata <yuv.raj0155@gmail.com>
+Subject: Fwd: Unbook Loan - 12398768903
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Request for Unbook of Loan 12398768903
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 12398768903
+
+Please process the unbook request for the mentioned loan details. Let me know if any additional information or documentation is required for the unwind.
+
+Priority: Medium
+Tags: Loan, Unbook, Request
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-26
+================================================================================
+
+=== 2025-05-15 10:53:07 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: Move work forward 🚀
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Upgrade Jira Project for Improved Collaboration
+Description: Atlassian has shared information on how to power up project collaboration by utilizing accelerators in Jira. The email highlights features such as integrations with Confluence, Loom, and other Atlassian tools, as well as automation capabilities to save time on repetitive tasks. It encourages users to upgrade their projects to become more efficient Jira users. More details can be found in the email content.
+Priority: Medium
+Tags: Jira, Collaboration, Accelerators, Integrations, Automation
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-27
+================================================================================
+
+=== 2025-05-15 10:53:10 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: Three easy steps to customize Jira
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Three easy steps to customize Jira
+Description: Atlassian has shared a guide on customizing Jira in three easy steps:
+1. Configure issues by customizing fields to store information.
+2. Configure workflows based on the team's unique workflow stages.
+3. Invite team members to collaborate effectively using Jira.
+The email also mentions joining the Atlassian Community for support in mastering team collaboration in Jira.
+Priority: Medium
+Tags: Jira, customization, issues, workflows, collaboration
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-28
+================================================================================
+
+=== 2025-05-15 10:53:13 ===
+EMAIL:
+From: "Atlassian" <info@e.atlassian.com>
+Subject: ⏰ Your Jira Premium trial is ending soon
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Jira Premium Trial Ending Soon
+Description: This is a friendly reminder that the 30-day Jira Premium trial will be ending in the next few days. If payment details are not added, the Jira site will downgrade to the free version. The email provides links to add payment details and learn more about Premium features. It also mentions the benefits of Jira Premium, including advanced permissions, multi-project automations, and 24/7 support. Additionally, free Atlassian University training courses are offered to ramp up teams quickly on Jira Premium.
+Priority: Medium
+Tags: Jira, Premium, Trial, Payment, Features, Atlassian University
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-29
+================================================================================
+
+=== 2025-05-15 10:53:16 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Unbook loan 1234
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unwind loan for Loan Account Number 1234
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+
+Please unwind the loan associated with the above details for Loan Account Number 1234. Let me know if any additional information or documentation is required for the process.
+
+Priority: Medium
+Tags: loan, unwind, documentation
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-30
+================================================================================
+
+=== 2025-05-16 11:51:15 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook loan 1234
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unwind loan associated with Loan Account Number 1234
+Description: Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 1234
+
+Please unwind the loan associated with the above details provided by the borrower. If any additional information or documentation is required, please let me know.
+
+Thank you for your assistance.
+Priority: Medium
+Tags: loan, unwind, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-31
+================================================================================
+
+=== 2025-05-19 11:48:20 ===
+EMAIL:
+From: sheik basha <basha.mjcet@gmail.com>
+Subject: Fwd: Unbook loan 1234
+
+EXTRACTED OUTPUT:
+```jira
+Summary: Unwind loan for Steve Nolan with contract number +14544434542
+Description: The request is to unwind a loan with the following details:
+Dealer Name: Sonic Automotive Group
+Borrower Name: Steve Nolan
+Contract Number: +14544434542
+Funding Date: 10-02-2025
+Loan Account Number: 1234
+
+Please proceed with the necessary steps to unwind the loan. Additional information or documentation might be required, so further communication may be needed.
+Priority: Medium
+Tags: loan, unwind, Sonic Automotive Group, Steve Nolan
+```
+
+JIRA TICKET: Successfully created Jira ticket: SCRUM-32
+================================================================================

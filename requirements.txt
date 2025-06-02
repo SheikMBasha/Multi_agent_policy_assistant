@@ -39,3 +39,5 @@ python-magic==0.4.27  # (file type detection, if needed)
 
 twilio
 python-multipart
+
+sentence-transformers

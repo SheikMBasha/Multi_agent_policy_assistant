@@ -302,9 +302,26 @@ def process_message(user_message: str, session_id: str = "default", user_name: O
                 "cache_hit": False
             }
         
+        # # Ask the moderator to determine which agent should handle this
+        # selected_agent_name = agents["moderator"].determine_agent(user_message)
+        # print(f"Selected agent is {selected_agent_name}")
+
         # Ask the moderator to determine which agent should handle this
-        selected_agent_name = agents["moderator"].determine_agent(user_message)
-        print(f"Selected agent is {selected_agent_name}")
+        # NEW LINE: Change to unpack a tuple rather than just get a string
+        selected_agent_name, inappropriate_category = agents["moderator"].determine_agent(user_message)
+        print(f"Selected agent is {selected_agent_name}, inappropriate category: {inappropriate_category}")
+
+        # NEW BLOCK: Handle inappropriate content if detected
+        if inappropriate_category:
+            inappropriate_response = agents["moderator"].get_inappropriate_response(user_message, inappropriate_category)
+            elapsed_time_ms = (time.time() - start_time) * 1000
+            return {
+                "agent": "SmallTalkAgent",
+                "response": inappropriate_response,
+                "context": {"user_name": context.user_name if hasattr(context, 'user_name') else None},
+                "response_time_ms": elapsed_time_ms,
+                "cache_hit": False
+            }
         
         # Convert display name to internal key
         agent_mapping = {
@@ -457,7 +474,7 @@ async def handle_call_transfer(call_sid: str, context: Any, confirmation: str) -
     # Only proceed with transfer if explicitly confirmed
     if confirmation == "confirmed" or "yes" in confirmation.lower() or "transfer" in confirmation.lower():
         # Set the transfer destination
-        transfer_number = "+918197885663"  # Replace with your actual support number
+        transfer_number = "+918886793222" #"+919791125766"  # Replace with your actual support number
         
         # Personalized transfer message
         name_part = f", {context.user_name}" if hasattr(context, 'user_name') and context.user_name else ""
@@ -577,7 +594,7 @@ async def voice(request: Request):
             print(f"Deleted phone session: {session_id}")
         return str(response)
     
-    # Always preprocess user input - preserve_literal check removed
+    # Always preprocess user input
     processed_input = preprocess_speech_input(user_input)
     
     # Check if we previously offered dealer options and the user might be selecting one
@@ -597,21 +614,6 @@ async def voice(request: Request):
         # Match any dealership indicator pattern
         (r'\b([A-Za-z]+(?:\s+[A-Za-z]+){0,2}(?:\s+Motors|\s+Dealership|\s+Auto|\s+Cars))\b', r'dealer is \1')
     ]
-
-    # processed_input = user_input;
-
-    # for pattern, replacement in dealer_patterns:
-    #     if re.search(pattern, processed_input, re.IGNORECASE):
-    #         processed_input = re.sub(pattern, replacement, processed_input, flags=re.IGNORECASE)
-    #         context.metadata["recognition_metrics"]["dealer_mentions"] += 1
-    #         print(f"Normalized dealer input: {processed_input}")
-    
-    # # Low confidence handling for dealer mentions
-    # dealer_words = ["dealer", "dealership", "motors", "automotive", "cars", "auto"]
-    # has_dealer_word = any(word in processed_input.lower() for word in dealer_words)
-    
-    # if has_dealer_word and confidence < 0.6:
-    #     return await handle_low_confidence_dealer(response, context, session_id)
     
     # Check if this is likely an introduction/name sharing
     introduction_patterns = [
@@ -666,6 +668,56 @@ async def voice(request: Request):
         if result.get("agent") == "TransferAgent" and result.get("context", {}).get("action") == "transfer":
             if "yes" in user_input.lower() or "transfer" in user_input.lower():
                 return await handle_call_transfer(call_sid, context, "confirmed")
+        
+        # UPDATED BLOCK: Check if this is an inappropriate content response
+        # More robust detection for any category of inappropriate response
+        is_inappropriate_response = False
+        
+        # Check for SmallTalkAgent with typical inappropriate response phrases
+        if result.get("agent") == "SmallTalkAgent":
+            inappropriate_phrases = [
+                "I'm your automotive assistant",
+                "I'm programmed to assist with automotive",
+                "I'm designed to assist with",
+                "I'm not designed to handle",
+                "I can't provide information about",
+                "I'd be happy to help you with those topics instead"
+            ]
+            
+            if any(phrase in agent_reply for phrase in inappropriate_phrases):
+                is_inappropriate_response = True
+                print("Detected inappropriate content response")
+        
+        # Handle inappropriate content responses
+        if is_inappropriate_response:
+            # Say the response
+            response.say(agent_reply)
+            
+            # Add a prompt to guide the user back to automotive topics
+            follow_up_prompts = [
+                "What automotive information can I help you with today?",
+                "Do you have any questions about vehicle financing or policies?",
+                "Is there any automotive information I can provide for you?",
+                "How can I assist you with your automotive needs?"
+            ]
+            
+            selected_prompt = random.choice(follow_up_prompts)
+            
+            # Create gather to collect next input
+            gather = create_optimized_gather(
+                selected_prompt,
+                context_type="greeting",
+                session_id=session_id
+            )
+            
+            # Append the gather to keep the call going
+            response.append(gather)
+            
+            # Fallback
+            response.say("I didn't hear anything. Thank you for calling. Goodbye!")
+            response.hangup()
+            
+            return str(response)
     except Exception as e:
         print(f"Error in process_message: {e}")
         agent_reply = f"I'm sorry, but I'm having trouble understanding. Can I help you with something else?"
@@ -680,14 +732,11 @@ async def voice(request: Request):
     
     # Say the bot's response, just a workaround, need to fix this flow later.
     if "[user_input_needed]" not in agent_reply:
-        print("Response say 61 begin")
         response.say(bot_reply)
-        print("Response say 61 end")
     
     # Check for repeated entity recognition failures with dealer names
     is_asking_for_dealer = "dealer name" in bot_reply.lower() or "dealership" in bot_reply.lower()
     if is_asking_for_dealer and hasattr(context, 'metadata') and context.metadata["entity_failures"] >= 3:
-        print("Line#688 triggered")
         return await handle_guided_dealer_selection(response, context, session_id, call_sid)
     elif is_asking_for_dealer and hasattr(context, 'metadata'):
         # Increment failure counter if still asking for dealer
@@ -767,8 +816,18 @@ async def voice(request: Request):
         response.hangup()
         
     else:
-        # Regular response - just hang up without additional prompts
+        # Regular response - add a standard follow-up instead of hanging up
+        # CHANGED: Don't hang up but ask if there's anything else
         response.pause(length=1)
+        
+        gather = create_optimized_gather(
+            "Is there anything else I can help you with?", 
+            context_type="followup", 
+            session_id=session_id
+        )
+        response.append(gather)
+        
+        # Fallback
         response.say("Thank you for calling. Goodbye!")
         response.hangup()
 
